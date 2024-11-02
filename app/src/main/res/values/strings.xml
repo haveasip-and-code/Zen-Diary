@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Zen Diary</string>
+    <string name="title_home">Home</string>
+    <string name="title_analytics">Analytics</string>
+    <string name="title_explore">Explore</string>
+    <string name="title_profile">Profile</string>
+    <string name="journal_button_description">Journal Button</string>
+</resources>
