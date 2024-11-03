@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when button is pressed -->
+    <item android:state_pressed="true" android:drawable="@drawable/bg_bottom_toolbar_journal_btn_selected" />
+    <!-- State when button is selected -->
+    <item android:state_selected="true" android:drawable="@drawable/bg_bottom_toolbar_journal_btn_selected" />
+    <!-- Default state -->
+    <item android:drawable="@color/transparent" />
+</selector>
