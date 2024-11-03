@@ -5,4 +5,5 @@
     <string name="title_explore">Explore</string>
     <string name="title_profile">Profile</string>
     <string name="journal_button_description">Journal Button</string>
+    <string name="notifications_fragment_title">Notifications</string>
 </resources>
