@@ -1,6 +1,7 @@
 package com.example.zendiary
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -22,20 +23,41 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
+        // Define the fragments where the BottomNavigationView should be hidden
+        val fragmentsToHideBottomNav = setOf(
+            R.id.journalFragment
+        )
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_analytics, R.id.navigation_explore, R.id.navigation_profile
+                R.id.navigation_home,
+                R.id.navigation_analytics,
+                R.id.navigation_explore,
+                R.id.navigation_profile
             )
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // Remove tint programmatically
-        navView.itemIconTintList = null
-
         // Hide the action bar
         supportActionBar?.hide()
+
+        // Set up click listener for the journal button
+        binding.journalButton.setOnClickListener {
+            navController.navigate(R.id.journalFragment)
+        }
+
+        // Add a listener to show/hide BottomNavigationView based on the destination
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id in fragmentsToHideBottomNav) {
+                navView.visibility = View.GONE
+            } else {
+                navView.visibility = View.VISIBLE
+            }
+        }
     }
 }

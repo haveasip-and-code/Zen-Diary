@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primary_background"
+    tools:context=".ui.journal.JournalFragment">
+
+    <LinearLayout
+        android:id="@+id/top_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_top_toolbar_journal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/ib_drawer_nav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:contentDescription="Drawer Navigation"
+                android:src="@drawable/ic_dn_journal"
+                android:backgroundTint="@color/transparent"/>
+
+            <Button
+                android:id="@+id/btn_clip"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="223dp"
+                android:background="@color/transparent"/>
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/transparent"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_dropdown"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="330dp"
+            android:background="@color/transparent"/>
+    </LinearLayout>
+
+    <!-- Title Input -->
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:hint="Tittle..."
+        android:textColor="@color/black"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:background="@color/transparent" />
+
+    <!-- Content Input -->
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="25dp"
+        android:hint="Write your thoughts here..."
+        android:gravity="top"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:background="@color/transparent"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical" />
+
+    <!-- Optional Image Preview Section -->
+    <LinearLayout
+        android:id="@+id/image_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:visibility="gone">
+
+        <!-- Image Preview Placeholder (repeated if multiple images allowed) -->
+        <ImageView
+            android:id="@+id/iv_image_preview"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:scaleType="centerCrop" />
+    </LinearLayout>
+
+    <!-- Bottom Toolbar Section -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_bottom_toolbar_journal"
+        android:elevation="2dp">
+
+        <!-- None Button -->
+        <ImageButton
+            android:id="@+id/ib_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="15dp"
+            android:contentDescription="None"
+            android:src="@drawable/ic_none"
+            android:background="@drawable/bg_bottom_toolbar_journal_btn_selected" />
+
+        <!-- Add Image Button -->
+        <ImageButton
+            android:id="@+id/ib_add_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="15dp"
+            android:contentDescription="Add Image"
+            android:src="@drawable/ic_add_image"
+            android:background="@drawable/bg_bottom_toolbar_journal_btn_selector"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Handwriting Button -->
+        <ImageButton
+            android:id="@+id/ib_handwriting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="15dp"
+            android:contentDescription="Handwriting"
+            android:src="@drawable/ic_handwriting"
+            android:background="@drawable/bg_bottom_toolbar_journal_btn_selector"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Add Audio Button -->
+        <ImageButton
+            android:id="@+id/ib_add_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="15dp"
+            android:contentDescription="Add Audio"
+            android:src="@drawable/ic_add_audio"
+            android:background="@drawable/bg_bottom_toolbar_journal_btn_selector"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>
