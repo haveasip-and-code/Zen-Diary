@@ -1,19 +1,12 @@
 package com.example.zendiary.ui.journal
-
 import androidx.fragment.app.viewModels
-<<<<<<< HEAD
 import android.os.Bundle
-=======
->>>>>>> khanh
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.zendiary.R
-<<<<<<< HEAD
-=======
 import android.graphics.Typeface
-import android.os.Bundle
 import android.text.Spannable
 import android.text.style.StyleSpan
 import android.view.Gravity
@@ -21,8 +14,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupWindow
->>>>>>> khanh
-
 class JournalFragment : Fragment() {
 
     companion object {
@@ -37,15 +28,6 @@ class JournalFragment : Fragment() {
         // TODO: Use the ViewModel
     }
 
-<<<<<<< HEAD
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_journal, container, false)
-    }
-}
-=======
     private lateinit var popupWindow: PopupWindow
     private lateinit var editText: EditText
 
@@ -129,4 +111,3 @@ class JournalFragment : Fragment() {
         popupWindow.dismiss()
     }
 }
->>>>>>> khanh
