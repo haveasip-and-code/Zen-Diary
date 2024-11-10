@@ -1,20 +1,38 @@
 package com.example.zendiary.ui.journal
+
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageButton
 import com.example.zendiary.R
 import android.graphics.Typeface
+import android.net.Uri
+import android.provider.MediaStore
 import android.text.Spannable
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.Gravity
 import android.widget.EditText
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-class JournalFragment : Fragment() {
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.zendiary.backend.journal.ColorPickerDialog
+import com.example.zendiary.backend.journal.DrawingView
+import com.example.zendiary.backend.journal.ImagePickerBottomSheet
+import com.example.zendiary.backend.journal.PenToolBottomSheetDialog
+
+class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelectedListener {
 
     companion object {
         fun newInstance() = JournalFragment()
@@ -22,11 +40,27 @@ class JournalFragment : Fragment() {
 
     private val viewModel: JournalViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private lateinit var drawingView: DrawingView
+    private lateinit var drawingToolbar: LinearLayout
+    private lateinit var ibHandwriting: ImageButton
+    private lateinit var journalFrame: FrameLayout
+    private lateinit var ibUndo: ImageButton
+    private lateinit var ibRedo: ImageButton
+    private lateinit var ibColorPicker: ImageButton
+    private lateinit var ibShapePicker: ImageButton
+    private lateinit var ibPenPicker: ImageButton
+    private lateinit var ibEraser: ImageButton
 
-        // TODO: Use the ViewModel
-    }
+    private lateinit var ibAddImage: ImageButton
+    private lateinit var imagePreviewContainer: LinearLayout
+    private lateinit var ivImagePreview: ImageView
+
+    private val CAMERA_PERMISSION_REQUEST_CODE = 1001
+    private val STORAGE_PERMISSION_REQUEST_CODE = 1002
+    private val CAMERA_REQUEST = 101
+    private val PICK_IMAGE_REQUEST = 102
+
+    private var selectedImageUri: Uri? = null
 
     private lateinit var popupWindow: PopupWindow
     private lateinit var editText: EditText
@@ -42,7 +76,175 @@ class JournalFragment : Fragment() {
         initToolbarPopup() // Khởi tạo popup toolbar
         setupEditTextSelectionListener() // Lắng nghe sự kiện chọn văn bản
 
+        // Initialize the layout and views
+        initViews(view)
+
+        // Set up button click listeners
+        setupButtonListeners(view)
+
+        ibAddImage.setOnClickListener {
+            // Show the bottom sheet dialog when the image button is clicked
+            val bottomSheet = ImagePickerBottomSheet()
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+        }
+
         return view
+    }
+
+    // Function to initialize the views and layout
+    private fun initViews(view: View) {
+        drawingToolbar = view.findViewById(R.id.drawing_toolbar)
+        journalFrame = view.findViewById(R.id.journalFrame)
+
+        // Initialize the DrawingView and add it to the layout
+        drawingView = DrawingView(requireContext(), null).apply {
+            visibility = View.GONE  // Initially hidden
+        }
+        journalFrame.addView(drawingView)  // Add the DrawingView as an overlay
+
+        ibAddImage = view.findViewById(R.id.ib_add_image)
+
+        ivImagePreview = view.findViewById(R.id.iv_image_preview)
+        imagePreviewContainer = view.findViewById(R.id.image_preview_container)
+    }
+
+    // Track whether eraser is currently active or not
+    private var isEraserActive = false
+
+    // Function to set up button click listeners
+    private fun setupButtonListeners(view: View) {
+        ibHandwriting = view.findViewById(R.id.ib_handwriting)
+        ibHandwriting.setOnClickListener {
+            toggleHandwritingMode()
+        }
+
+        ibUndo = view.findViewById(R.id.ib_undo)
+        ibUndo.setOnClickListener {
+
+        }
+
+        ibRedo = view.findViewById(R.id.ib_redo)
+        ibRedo.setOnClickListener {
+
+        }
+
+        ibColorPicker = view.findViewById(R.id.ib_color_picker)
+        ibColorPicker.setOnClickListener {
+            openColorPicker()
+        }
+
+        ibShapePicker = view.findViewById(R.id.ib_shape_picker)
+        ibShapePicker.setOnClickListener {
+
+        }
+
+        ibPenPicker = view.findViewById(R.id.ib_pen_tool)
+        ibPenPicker.setOnClickListener {
+            openPenToolBottomSheet()
+        }
+
+        ibEraser = view.findViewById(R.id.ib_eraser_tool)
+        ibEraser.setOnClickListener {
+            // Toggle the eraser mode
+            isEraserActive = !isEraserActive
+
+            // Enable or disable eraser mode based on the current state
+            drawingView.enableEraserMode(isEraserActive)
+
+            // Optionally, change the button icon to indicate eraser mode is active or not
+            if (isEraserActive) {
+                ibEraser.setBackgroundResource(R.drawable.bg_bottom_toolbar_journal_btn_selected)  // Use an active icon
+            } else {
+                ibEraser.setBackgroundColor(resources.getColor(android.R.color.transparent, null))  // Use the default icon
+            }
+        }
+    }
+
+    private fun openColorPicker() {
+        // Open the color picker dialog
+        val colorPickerDialog = ColorPickerDialog(requireContext()) { selectedColor ->
+            // When a color is selected, update the drawing view's brush color
+            drawingView.setBrushColor(selectedColor)
+        }
+        colorPickerDialog.show()
+    }
+
+    private fun openPenToolBottomSheet() {
+        // Show the Pen Tool Bottom Sheet Dialog
+        val penToolDialog = PenToolBottomSheetDialog { selectedBrush, brushWidth ->
+            // Handle the brush selection and width adjustment
+            drawingView.setBrushType(selectedBrush)
+            drawingView.setBrushWidth(brushWidth)
+        }
+
+        penToolDialog.show(parentFragmentManager, "PenToolBottomSheet")
+    }
+
+    override fun onGalleryOptionSelected() {
+        // Open gallery to pick an image
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    // This method is invoked when the camera option is selected
+    override fun onCameraOptionSelected() {
+        // Check camera permission first
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            // Open the camera
+            openCamera()
+        } else {
+            // Request camera permission
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    // This method opens the camera to take a picture
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, CAMERA_REQUEST)
+    }
+
+
+    // Handle the result after image is picked
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                PICK_IMAGE_REQUEST -> {
+                    selectedImageUri = data?.data
+                    insertImageIntoPreview(selectedImageUri)
+                }
+                CAMERA_REQUEST -> {
+                    val photo: Bitmap = data?.extras?.get("data") as Bitmap
+                    insertImageIntoPreview(photo)
+                }
+            }
+        }
+    }
+
+    // Insert image into the preview container's ImageView
+    private fun insertImageIntoPreview(imageUri: Uri?) {
+        imageUri?.let {
+            // Convert the image URI into a bitmap
+            val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, it)
+            ivImagePreview.setImageBitmap(bitmap)
+
+            // Make the image preview container visible
+            imagePreviewContainer.visibility = View.VISIBLE
+
+            Log.d("ImagePicker", "Image selected from gallery")
+        }
+    }
+
+    private fun insertImageIntoPreview(bitmap: Bitmap) {
+        // Insert the bitmap directly into the ImageView
+        ivImagePreview.setImageBitmap(bitmap)
+
+        // Make the image preview container visible
+        imagePreviewContainer.visibility = View.VISIBLE
+
+        Log.d("ImagePicker", "Image taken from camera")
     }
 
     // Khởi tạo popup toolbar
@@ -110,4 +312,18 @@ class JournalFragment : Fragment() {
         }
         popupWindow.dismiss()
     }
+
+    // Toggle the visibility of the drawing mode
+    private fun toggleHandwritingMode() {
+        if (drawingView.visibility == View.GONE) {
+            drawingView.visibility = View.VISIBLE
+            drawingToolbar.visibility = View.VISIBLE
+            ibHandwriting.setBackgroundResource(R.drawable.bg_bottom_toolbar_journal_btn_selected)  // Set to colored background
+        } else {
+            drawingView.visibility = View.GONE
+            drawingToolbar.visibility = View.GONE
+            ibHandwriting.setBackgroundColor(resources.getColor(android.R.color.transparent, null))  // Set to transparent background
+        }
+    }
+
 }
