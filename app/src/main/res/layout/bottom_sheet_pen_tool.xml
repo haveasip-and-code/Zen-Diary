@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_pen_tool_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose a Brush"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:gravity="center"/>
+
+    <!-- Brush options -->
+    <RadioGroup
+        android:id="@+id/radio_group_brushes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <RadioButton
+            android:id="@+id/rb_round_brush"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round"
+            android:paddingEnd="16dp" />
+
+        <RadioButton
+            android:id="@+id/rb_square_brush"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Square"
+            android:paddingEnd="16dp" />
+
+        <RadioButton
+            android:id="@+id/rb_custom_brush"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom"
+            android:paddingEnd="16dp" />
+    </RadioGroup>
+
+    <!-- Brush width adjustment -->
+    <TextView
+        android:id="@+id/tv_brush_width"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Adjust Brush Width"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:gravity="center"/>
+
+    <SeekBar
+        android:id="@+id/seekBarBrushWidth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="8" />
+
+    <!-- Close button -->
+    <Button
+        android:id="@+id/btn_apply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apply"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_blue_dark"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>

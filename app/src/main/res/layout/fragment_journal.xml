@@ -52,52 +52,186 @@
             android:background="@color/transparent"/>
     </LinearLayout>
 
-    <!-- Title Input -->
-    <EditText
-        android:id="@+id/et_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="25dp"
-        android:hint="Tittle..."
-        android:textColor="@color/black"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        android:padding="8dp"
-        android:background="@color/transparent" />
-
-    <!-- Content Input -->
-    <EditText
-        android:id="@+id/et_content"
+    <!-- Root FrameLayout that will hold all UI elements -->
+    <FrameLayout
+        android:id="@+id/journalFrame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginHorizontal="25dp"
-        android:hint="Write your thoughts here..."
-        android:gravity="top"
-        android:padding="8dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:background="@color/transparent"
-        android:inputType="textMultiLine"
-        android:scrollbars="vertical" />
+        android:layout_weight="1">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <!-- Optional Image Preview Section -->
-    <LinearLayout
-        android:id="@+id/image_preview_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="8dp"
-        android:visibility="gone">
+            <!-- Parent LinearLayout to hold all content -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <!-- Image Preview Placeholder (repeated if multiple images allowed) -->
-        <ImageView
-            android:id="@+id/iv_image_preview"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="8dp"
-            android:scaleType="centerCrop" />
-    </LinearLayout>
+                <!-- Title Input -->
+                <EditText
+                    android:id="@+id/et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:hint="Title..."
+                    android:textColor="@color/black"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:background="@color/transparent" />
+
+                <!-- Content Input -->
+                <EditText
+                    android:id="@+id/et_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:hint="Write your thoughts here..."
+                    android:gravity="top"
+                    android:padding="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:background="@color/transparent"
+                    android:inputType="textMultiLine"/>
+
+                <!-- Image Section -->
+                <LinearLayout
+                    android:id="@+id/image_preview_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp"
+                    android:visibility="gone"
+                    android:gravity="center_horizontal"> <!-- Centers the image horizontally -->
+
+                    <ImageView
+                        android:id="@+id/iv_image_preview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:contentDescription="Image"
+                        android:scaleType="fitCenter"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <com.example.zendiary.backend.journal.DrawingView
+            android:id="@+id/drawingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/white" />
+
+        <!-- Tool Bar on the right side, initially hidden -->
+        <LinearLayout
+            android:id="@+id/drawing_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:paddingVertical="15dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_drawing_toolbar_journal"
+            android:gravity="top|center_horizontal"
+            android:elevation="10dp"
+            android:visibility="gone"> <!-- Initially hidden -->
+
+            <!-- Tool Buttons (e.g., color picker, pen, eraser) -->
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_threedots"
+                android:background="@color/transparent"
+                android:layout_marginVertical="5dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Undo Button -->
+            <ImageButton
+                android:id="@+id/ib_undo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_undo"
+                android:contentDescription="Undo"
+                android:background="@color/transparent"
+                android:layout_marginVertical="5dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Redo Button -->
+            <ImageButton
+                android:id="@+id/ib_redo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_redo"
+                android:contentDescription="Redo"
+                android:background="@color/transparent"
+                android:layout_marginVertical="5dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Color Picker Button -->
+            <ImageButton
+                android:id="@+id/ib_color_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_color_picker"
+                android:backgroundTint="@color/black"
+                android:contentDescription="Color Picker"
+                android:background="@color/transparent"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Shape Picker Button -->
+            <ImageButton
+                android:id="@+id/ib_shape_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shape_picker"
+                android:contentDescription="Shape Picker"
+                android:background="@color/transparent"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Pen Tool Button -->
+            <ImageButton
+                android:id="@+id/ib_pen_tool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_pen"
+                android:contentDescription="Pen Tool"
+                android:background="@color/transparent"
+                android:layout_marginVertical="5dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Eraser Tool Button -->
+            <ImageButton
+                android:id="@+id/ib_eraser_tool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_eraser"
+                android:contentDescription="Eraser Tool"
+                android:background="@color/transparent"
+                android:layout_marginVertical="5dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+    </FrameLayout>
 
     <!-- Bottom Toolbar Section -->
     <LinearLayout
@@ -130,7 +264,7 @@
             android:padding="15dp"
             android:contentDescription="Add Image"
             android:src="@drawable/ic_add_image"
-            android:background="@drawable/bg_bottom_toolbar_journal_btn_selector"
+            android:background="@color/transparent"
             android:clickable="true"
             android:focusable="true" />
 
@@ -143,7 +277,7 @@
             android:padding="15dp"
             android:contentDescription="Handwriting"
             android:src="@drawable/ic_handwriting"
-            android:background="@drawable/bg_bottom_toolbar_journal_btn_selector"
+            android:background="@color/transparent"
             android:clickable="true"
             android:focusable="true" />
 
@@ -156,7 +290,7 @@
             android:padding="15dp"
             android:contentDescription="Add Audio"
             android:src="@drawable/ic_add_audio"
-            android:background="@drawable/bg_bottom_toolbar_journal_btn_selector"
+            android:background="@color/transparent"
             android:clickable="true"
             android:focusable="true" />
     </LinearLayout>
