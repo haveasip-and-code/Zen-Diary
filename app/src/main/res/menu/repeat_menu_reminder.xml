@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/every_monday"
+        android:title="Every Monday"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+    <item
+        android:id="@+id/every_tuesday"
+        android:title="Every Tuesday"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+    <item
+        android:id="@+id/every_wednesday"
+        android:title="Every Wednesday"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+    <item
+        android:id="@+id/every_thursday"
+        android:title="Every Thursday"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+    <item
+        android:id="@+id/every_friday"
+        android:title="Every Friday"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+    <item
+        android:id="@+id/every_saturday"
+        android:title="Every Saturday"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+    <item
+        android:id="@+id/every_sunday"
+        android:title="Every Sunday"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+    <item
+        android:id="@+id/never"
+        android:title="Never"
+        android:textAppearance="@style/CustomPopupMenuText"/>
+</menu>

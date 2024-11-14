@@ -6,4 +6,13 @@
     <string name="title_profile">Profile</string>
     <string name="journal_button_description">Journal Button</string>
     <string name="notifications_fragment_title">Notifications</string>
+<<<<<<< Updated upstream
+=======
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="ampm_values">
+        <item>AM</item>
+        <item>PM</item>
+    </string-array>
+>>>>>>> Stashed changes
 </resources>

@@ -164,7 +164,7 @@
         android:fontFamily="@font/josefin_sans_medium"
         android:text="Already have an account?"
         android:textColorLink="#515694"
-        android:textSize="14dp"
+        android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.282"
@@ -184,98 +184,157 @@
         app:layout_constraintVertical_bias="0.94"
         app:srcCompat="@drawable/signup_button2" />
 
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/password_box"
+        android:scaleX="1.05"
+        android:scaleY="0.95"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.68" />
+
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginStart="94dp"
-        android:layout_marginEnd="88dp"
-        android:layout_marginBottom="58dp"
-        android:background="@drawable/password_box"
-        android:ems="10"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:ems="12"
+        android:fontFamily="@font/josefin_sans_medium"
         android:inputType="textPassword"
-        android:scaleY="1.4"
-        android:scaleX="1.05"
+        android:textColor="#4D5036"
+        android:textSize="20sp"
+        android:translationZ="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintEnd_toEndOf="@+id/imageView5"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="@+id/imageView5"
+        tools:ignore="TextFields" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.725" />
+        app:layout_constraintVertical_bias="0.545"
+        app:srcCompat="@drawable/phone_box" />
 
     <EditText
         android:id="@+id/editTextPhone"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginStart="94dp"
-        android:layout_marginEnd="88dp"
-        android:layout_marginBottom="58dp"
-        android:background="@drawable/phone_box"
-        android:ems="10"
-        android:inputType="phone"
-        android:scaleY="1.4"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:ems="12"
+        android:fontFamily="@font/josefin_sans_medium"
+        android:inputType="text"
+        android:textColor="#4D5036"
+        android:textSize="20sp"
+        android:translationZ="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView7"
+        app:layout_constraintEnd_toEndOf="@+id/imageView7"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="@+id/imageView7"
+        app:layout_constraintTop_toTopOf="@+id/imageView7" />
+
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/confirm_passwork"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
+        app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.58" />
-
+        app:layout_constraintVertical_bias="0.81" />
 
     <EditText
-        android:id="@+id/editTextConfirmPassword"
+        android:id="@+id/editConfirmPassword"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginStart="94dp"
-        android:layout_marginEnd="88dp"
-        android:layout_marginBottom="58dp"
-        android:background="@drawable/confirm_passwork"
-        android:ems="10"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:ems="12"
+        android:fontFamily="@font/josefin_sans_medium"
         android:inputType="textPassword"
-        android:scaleY="1.4"
+        android:textColor="#4D5036"
+        android:textSize="20sp"
+        android:translationZ="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/imageView9"
+        app:layout_constraintTop_toTopOf="@+id/imageView9"
+        tools:ignore="TextFields" />
+
+
+
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="1.05"
+        android:scaleY="0.95"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.86" />
-
+        app:layout_constraintVertical_bias="0.405"
+        app:srcCompat="@drawable/email_box" />
 
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginStart="94dp"
-        android:layout_marginEnd="88dp"
-        android:layout_marginBottom="58dp"
-        android:background="@drawable/email_box"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:scaleY="1.4"
-        android:scaleX="1.05"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:ems="12"
+        android:fontFamily="@font/josefin_sans_medium"
+        android:inputType="text"
+        android:textColor="#4D5036"
+        android:textSize="20sp"
+        android:translationZ="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+        app:layout_constraintEnd_toEndOf="@+id/imageView4"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.44" />
+        app:layout_constraintVertical_bias="0.275"
+        app:srcCompat="@drawable/fullname_box" />
 
     <EditText
         android:id="@+id/editName"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginStart="94dp"
-        android:layout_marginEnd="88dp"
-        android:layout_marginBottom="58dp"
-        android:background="@drawable/fullname_box"
-        android:ems="10"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:ems="12"
+        android:fontFamily="@font/josefin_sans_medium"
         android:inputType="text"
-        android:scaleY="1.4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        android:textColor="#4D5036"
+        android:textSize="20sp"
+        android:translationZ="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        app:layout_constraintEnd_toEndOf="@+id/imageView10"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="@+id/imageView10"
+        app:layout_constraintTop_toTopOf="@+id/imageView10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
