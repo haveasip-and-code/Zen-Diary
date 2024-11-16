@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import com.example.zendiary.R
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.provider.MediaStore
 import android.text.Spannable
@@ -25,8 +27,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.backend.journal.ColorPickerDialog
 import com.example.zendiary.backend.journal.DrawingView
 import com.example.zendiary.backend.journal.ImagePickerBottomSheet
@@ -88,6 +93,9 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
         }
 
+        view.post {
+            showPopup()  // Gọi showPopup sau khi giao diện đã được vẽ
+        }
         return view
     }
 
@@ -326,4 +334,74 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         }
     }
 
+    private fun showPopup() {
+        // Inflate layout popup
+        val inflater = layoutInflater
+        val popupView = inflater.inflate(R.layout.popup_layout, null)
+
+        // Tạo nền tối mờ cho popup
+        val parentView = requireActivity().window.decorView.rootView
+        val dimBackground = ColorDrawable(Color.BLACK)
+        dimBackground.alpha = 150 // Độ mờ của nền (0-255)
+        parentView.overlay.add(dimBackground)
+
+        // Tạo PopupWindow với kích thước toàn màn hình
+        popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.MATCH_PARENT, // Chiều rộng toàn màn hình
+            ViewGroup.LayoutParams.MATCH_PARENT  // Chiều cao toàn màn hình
+        ).apply {
+            isOutsideTouchable = true
+            isFocusable = true
+            elevation = 10F // Thêm độ nổi để popup nổi bật hơn
+            setBackgroundDrawable(ColorDrawable(Color.WHITE)) // Nền trắng cho popup
+
+            setOnDismissListener {
+                // Xóa nền mờ khi popup bị đóng
+                parentView.overlay.remove(dimBackground)
+            }
+        }
+
+        // Get the RecyclerView and set it up
+        val recyclerView: RecyclerView = popupView.findViewById(R.id.popupRecyclerView)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 3) // 3 columns
+
+        // List of items to display in the popup
+        val items = listOf("Family", "Family", "Family", "Family", "Music", "Family")
+
+        // Set the adapter with a click listener
+        recyclerView.adapter = PopupAdapter(items) { selectedItem ->
+            // Handle item click (e.g., dismiss popup and show a message)
+            popupWindow.dismiss()
+        }
+
+        // Show the PopupWindow at the center of the screen
+        popupWindow.showAtLocation(requireView(), Gravity.CENTER, 0, 0)
+    }
+
+
+}
+
+class PopupAdapter(
+    private val items: List<String>,
+    private val itemClickListener: (String) -> Unit
+) : RecyclerView.Adapter<PopupAdapter.PopupViewHolder>() {
+
+    class PopupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textView: TextView = itemView.findViewById(R.id.itemText)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopupViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
+        return PopupViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: PopupViewHolder, position: Int) {
+        holder.textView.text = items[position]
+        holder.itemView.setOnClickListener {
+            itemClickListener(items[position])
+        }
+    }
+
+    override fun getItemCount(): Int = items.size
 }
