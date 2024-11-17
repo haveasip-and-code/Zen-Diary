@@ -13,3 +13,32 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+
+# Flask logs
+*.log
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Dependency management (if not using pipenv)
+Pipfile*
+Pipfile.lock
+
+# SQLite and other database files
+*.db
+
+# Other system files
+.DS_Store
+/app/src/main/java/com/example/zendiary/backend/python/venv
