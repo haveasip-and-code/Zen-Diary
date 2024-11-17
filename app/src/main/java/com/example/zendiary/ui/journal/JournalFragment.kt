@@ -23,13 +23,17 @@ import android.text.Spannable
 import android.text.style.StyleSpan
 import android.util.Log
 import android.view.Gravity
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.backend.journal.ColorPickerDialog
@@ -43,7 +47,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         fun newInstance() = JournalFragment()
     }
 
-    private val viewModel: JournalViewModel by viewModels()
+    private lateinit var viewModel: JournalViewModel
 
     private lateinit var drawingView: DrawingView
     private lateinit var drawingToolbar: LinearLayout
@@ -74,6 +78,8 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(this)[JournalViewModel::class.java]
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_journal, container, false)
         editText = view.findViewById(R.id.et_content)
@@ -84,14 +90,11 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Initialize the layout and views
         initViews(view)
 
+        // Observe the sentiment result from the ViewModel
+        observeSentimentResult()
+
         // Set up button click listeners
         setupButtonListeners(view)
-
-        ibAddImage.setOnClickListener {
-            // Show the bottom sheet dialog when the image button is clicked
-            val bottomSheet = ImagePickerBottomSheet()
-            bottomSheet.show(childFragmentManager, bottomSheet.tag)
-        }
 
         view.post {
             showPopup()  // Gọi showPopup sau khi giao diện đã được vẽ
@@ -110,8 +113,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         }
         journalFrame.addView(drawingView)  // Add the DrawingView as an overlay
 
-        ibAddImage = view.findViewById(R.id.ib_add_image)
-
         ivImagePreview = view.findViewById(R.id.iv_image_preview)
         imagePreviewContainer = view.findViewById(R.id.image_preview_container)
     }
@@ -121,6 +122,14 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
     // Function to set up button click listeners
     private fun setupButtonListeners(view: View) {
+
+        ibAddImage = view.findViewById(R.id.ib_add_image)
+        ibAddImage.setOnClickListener {
+            // Show the bottom sheet dialog when the image button is clicked
+            val bottomSheet = ImagePickerBottomSheet()
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+        }
+
         ibHandwriting = view.findViewById(R.id.ib_handwriting)
         ibHandwriting.setOnClickListener {
             toggleHandwritingMode()
@@ -164,6 +173,31 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
                 ibEraser.setBackgroundResource(R.drawable.bg_bottom_toolbar_journal_btn_selected)  // Use an active icon
             } else {
                 ibEraser.setBackgroundColor(resources.getColor(android.R.color.transparent, null))  // Use the default icon
+            }
+        }
+
+        view.findViewById<Button>(R.id.btn_save).setOnClickListener {
+            val journalText = editText.text.toString()
+            if (journalText.isNotEmpty()) {
+                viewModel.analyzeSentiment(journalText)
+                Toast.makeText(requireContext(), "Sentiment analysis completed", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Please enter text to analyze", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    private fun observeSentimentResult() {
+        viewModel.sentimentResult.observe(viewLifecycleOwner) { sentiment ->
+            if (sentiment != null) {
+                val sentimentScore = sentiment["compound"] ?: 0f
+                val sentimentMessage = when {
+                    sentimentScore > 0.1 -> "Positive Sentiment"
+                    sentimentScore < -0.1 -> "Negative Sentiment"
+                    else -> "Neutral Sentiment"
+                }
+                Toast.makeText(context, sentimentMessage, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -212,7 +246,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA_REQUEST)
     }
-
 
     // Handle the result after image is picked
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
