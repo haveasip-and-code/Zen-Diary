@@ -16,19 +16,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Alignment Buttons -->
+        <ImageButton
+            android:id="@+id/btn_align_left"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_align_left"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <ImageButton
+            android:id="@+id/btn_align_center"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_align_center"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <ImageButton
+            android:id="@+id/btn_align_right"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_align_right"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <ImageButton
+            android:id="@+id/btn_align_justify"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_align_justify"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
         <ImageButton
             android:id="@+id/btn_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Bold"
-            android:src="@drawable/ic_bold" />
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_bold"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+
+        <!-- Text Color -->
+        <ImageButton
+            android:id="@+id/btn_text_color"
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_color"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
 
         <ImageButton
             android:id="@+id/btn_italic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Italic"
-            android:src="@drawable/ic_italic" />
+            android:layout_width="40dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_italic"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+        />
     </LinearLayout>
 
 

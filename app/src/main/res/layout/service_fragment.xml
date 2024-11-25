@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.221"
+        android:scaleX="1.3"
+        app:srcCompat="@drawable/background_editprofile" />
+
+    <ImageButton
+        android:id="@+id/backButtonService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.061"
+        app:srcCompat="@drawable/arrow_back" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/josefin_sans_bold"
+        android:text="Terms of Service"
+        android:textColorLink="#4D5036"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <ScrollView
+        android:layout_width="400dp"
+        android:layout_height="690dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="@+id/imageView3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- First Paragraph -->
+            <TextView
+                android:id="@+id/paragraphTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:lineSpacingExtra="4dp"
+                android:text="Terms of Service\nEffective Date: 24/12/2024" />
+
+            <!-- Intro Paragraph -->
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Welcome to Zen Diary! By using this app, you agree to the following terms. Please read them carefully."/>
+            <!-- Section Headers -->
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="1. Acceptance of Terms" />
+
+            <!-- Content -->
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="By downloading, accessing, or using Zen Diary, you agree to be bound by these Terms of Service. If you do not agree, you may not use the app."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="2. Description of Service" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Zen Diary provides a journaling platform where users can write diary entries, analyze their sentiments, and sync their data to the cloud. The app is available for Android devices only."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="3. User Responsibilities" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="You are responsible for maintaining the security of your PIN or password used for authentication.\nYou must not use the app for illegal activities or to store harmful content."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="4. Data Ownership" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="You retain full ownership of all content (e.g., journal entries) you create using Zen Diary.\nBy enabling cloud sync, you authorize us to store your data securely on Firebase."/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="5. Prohibited Activities" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="You agree not to:\nReverse-engineer or modify the app.\nExploit the app for commercial purposes without prior consent.\nUpload or store malicious or illegal content."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="6. Limitations of Liability" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Zen Diary is provided 'as is' without warranties of any kind. We are not responsible for:\nData loss due to device damage or unintentional deletion.\nAny indirect or consequential damages arising from app use."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="7. Termination" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="We reserve the right to terminate or suspend access to the app if these Terms are violated."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="8. Changes to Terms" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="We may update these Terms periodically. Continued use of the app indicates acceptance of the revised terms." />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="9. Governing Law" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="These Terms are governed by and construed in accordance with the laws of Viet Nam."/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="10. Contact Us" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="If you have any questions about this Privacy Policy, contact us at zendiary@gmail.com.\n" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

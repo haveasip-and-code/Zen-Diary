@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.221"
+        android:scaleX="1.3"
+        app:srcCompat="@drawable/background_editprofile" />
+
+    <ImageButton
+        android:id="@+id/backButtonSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.061"
+        app:srcCompat="@drawable/arrow_back" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/josefin_sans_bold"
+        android:text="Help &amp; Support"
+        android:textColorLink="#4D5036"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <ScrollView
+        android:layout_width="400dp"
+        android:layout_height="690dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="@+id/imageView3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- First Paragraph -->
+            <TextView
+                android:id="@+id/paragraphTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:lineSpacingExtra="4dp"
+                android:text="Help and Support" />
+
+            <!-- Intro Paragraph -->
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="We’re here to help you make the most of Zen Diary. Below, you’ll find answers to common questions and guidance on how to contact us if you need further support."/>
+            <!-- Section Headers -->
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="1. Frequently Asked Questions (FAQ)" />
+
+            <!-- Content -->
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium_italic"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="General Questions"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Q: What is Zen Diary?\nA: Zen Diary is an app that helps you write and reflect on your day. It provides AI-powered sentiment analysis to help you release your emotions and avoid re-reading sad memories."/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Q: Is Zen Diary available offline?\nA: Yes! You can write entries and access previous entries offline. Synchronization with the cloud happens when you’re connected to the internet."/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium_italic"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Data and Privacy"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Q: Where is my data stored?\nA: Your data is stored locally on your device using SQLite. If you enable cloud sync, it will also be securely stored on Firebase."/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Q: How do I delete my data?\nA: You can delete individual entries from the app. If you’ve synced your data, the deleted entries will also be removed from Firebase."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium_italic"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Features and Usage" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Q: How does sentiment analysis work?\nA: Zen Diary uses AI to analyze the tone of your entries (happy or sad). This analysis helps you reflect on your emotions more effectively."/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Q: Can I recover deleted entries?\nA: Once an entry is deleted, it cannot be recovered, so please ensure you want to delete it before confirming."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="2. Troubleshooting" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium_italic"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="App Issues"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Problem: The app isn’t saving my entries.\nSolution: Ensure you have enough storage space on your device. If the problem persists, restart the app or clear the app cache in your device settings."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Problem: I can’t sync my data to the cloud.\nSolution: Check your internet connection. If you’re connected, the app will automatically retry syncing in the background."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Problem: I forgot my PIN/password.\nSolution: In case you forgot your PIN/password, you can choose the Forgot my password in either Login screen or Reset password/PIN section."/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium_italic"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Performance Issues"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Problem: The app is running slowly.\nSolution: Close other running apps to free up memory or restart your device. Ensure your device meets the minimum requirements (Android 8.0 or later)."/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="3. Contact Us"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="If you’re unable to resolve your issue using the FAQ or troubleshooting steps, our team is happy to assist you.\nEmail Support\nEmail us directly at zendiary@gmail.com with the following details:"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="A description of the problem.\nSteps to reproduce the issue (if applicable).\nYour device model and Android version."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Response Time\nOur support team aims to respond to all inquiries within 48 hours."/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="If you’re unable to resolve your issue using the FAQ or troubleshooting steps, our team is happy to assist you.\nEmail Support\nEmail us directly at zendiary@gmail.com with the following details:"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_bold"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="4. Tips for Best Experience"/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Backup Your Data: Enable cloud synchronization to ensure your data is safely stored and retrievable.\nExplore Guiding Questions: Use the built-in guiding questions to help express your feelings more easily.\nStay Updated: Ensure you’re using the latest version of the app for optimal performance and features.\nIf you have suggestions for improving Zen Diary, we’d love to hear from you! Your feedback helps us make Zen Diary even better."/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="Thank you for using Zen Diary!\n"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,15 +2,18 @@ package com.example.zendiary.ui.journal
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
-import androidx.fragment.app.viewModels
+import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -19,7 +22,10 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.provider.MediaStore
+import android.text.Layout
 import android.text.Spannable
+import android.text.style.AlignmentSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
 import android.view.Gravity
@@ -32,7 +38,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -74,6 +79,34 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private lateinit var popupWindow: PopupWindow
     private lateinit var editText: EditText
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Kiểm tra xem popup đã hiển thị chưa từ SharedPreferences
+        if (true) {//getPopupState()) {
+            view?.post {
+                //showPopup()
+                savePopupState(false)
+            }
+        }
+    }
+
+
+    // Lưu giá trị của biến popupIsShown vào SharedPreferences
+    fun savePopupState(isPopupShown: Boolean) {
+        val sharedPreferences = requireActivity().getSharedPreferences("AppPrefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("popupIsShown", isPopupShown)  // Lưu trạng thái của popup
+        editor.apply()  // Lưu thay đổi
+    }
+
+    // Lấy giá trị của popupIsShown từ SharedPreferences
+    fun getPopupState(): Boolean {
+        val sharedPreferences = requireActivity().getSharedPreferences("AppPrefs", MODE_PRIVATE)
+
+        // Nếu không tìm thấy giá trị lưu trữ, mặc định là true (popup sẽ được hiển thị lần đầu tiên)
+        return sharedPreferences.getBoolean("popupIsShown", false)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,9 +129,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Set up button click listeners
         setupButtonListeners(view)
 
-        view.post {
-            showPopup()  // Gọi showPopup sau khi giao diện đã được vẽ
-        }
         return view
     }
 
@@ -288,22 +318,80 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         Log.d("ImagePicker", "Image taken from camera")
     }
 
+
     // Khởi tạo popup toolbar
     private fun initToolbarPopup() {
         val toolbarView = layoutInflater.inflate(R.layout.toolbar_formatting, null)
-        popupWindow = PopupWindow(toolbarView,
+        popupWindow = PopupWindow(
+            toolbarView,
             LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
             isOutsideTouchable = true
             isFocusable = true
         }
 
-        // Xử lý sự kiện cho các nút trong popup toolbar
+        // Formatting buttons
         val btnBold = toolbarView.findViewById<ImageButton>(R.id.btn_bold)
         val btnItalic = toolbarView.findViewById<ImageButton>(R.id.btn_italic)
+        val btnAlignLeft = toolbarView.findViewById<ImageButton>(R.id.btn_align_left)
+        val btnAlignCenter = toolbarView.findViewById<ImageButton>(R.id.btn_align_center)
+        val btnAlignRight = toolbarView.findViewById<ImageButton>(R.id.btn_align_right)
+        val btnAlignJustify = toolbarView.findViewById<ImageButton>(R.id.btn_align_justify)
+        val btnTextColor = toolbarView.findViewById<ImageButton>(R.id.btn_text_color)
 
+        // Add click listeners
         btnBold.setOnClickListener { applyBoldStyle() }
         btnItalic.setOnClickListener { applyItalicStyle() }
+        btnAlignLeft.setOnClickListener { applyAlignment("left") }
+        btnAlignCenter.setOnClickListener { applyAlignment("center") }
+        btnAlignRight.setOnClickListener { applyAlignment("right") }
+        btnAlignJustify.setOnClickListener { applyAlignment("justify") }
+        btnTextColor.setOnClickListener { openColorPickerToolBar() }
+    }
+
+    private fun applyAlignment(alignment: String) {
+        val alignmentSpan = when (alignment) {
+            "left" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)
+            "center" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER)
+            "right" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE)
+            "justify" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL) // Justification can depend on Android version
+            else -> null
+        }
+
+        alignmentSpan?.let {
+            val start = editText.selectionStart
+            val end = editText.selectionEnd
+            val spannable = editText.text as Spannable
+            spannable.setSpan(alignmentSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
+    private fun openColorPickerToolBar() {
+        // Open the color picker dialog
+        val colorPickerDialog = ColorPickerDialog(requireContext()) { selectedColor ->
+            // When a color is selected, apply the selected color to the text in EditText
+            applyTextColor(selectedColor)
+        }
+        colorPickerDialog.show()
+    }
+
+    private fun applyTextColor(color: Int) {
+        // Get the start and end positions of the selected text in EditText
+        val start = editText.selectionStart
+        val end = editText.selectionEnd
+
+        // Check if there is a valid text selection
+        if (start < end) {
+            val spannable = editText.text as Spannable
+            // Apply the selected color to the selected text
+            spannable.setSpan(
+                ForegroundColorSpan(color),
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
     }
 
     // Thiết lập sự kiện chọn văn bản trong EditText
@@ -397,14 +485,16 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
         // Get the RecyclerView and set it up
         val recyclerView: RecyclerView = popupView.findViewById(R.id.popupRecyclerView)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 3) // 3 columns
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // 3 columns
 
         // List of items to display in the popup
         val items = listOf("Family", "Family", "Family", "Family", "Music", "Family")
 
-        // Set the adapter with a click listener
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_16dp)
+        recyclerView.addItemDecoration(GridSpacingItemDecoration(2, spacingInPixels, true))
+
+// Adapter
         recyclerView.adapter = PopupAdapter(items) { selectedItem ->
-            // Handle item click (e.g., dismiss popup and show a message)
             popupWindow.dismiss()
         }
 
@@ -437,4 +527,32 @@ class PopupAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+}
+
+class GridSpacingItemDecoration(
+    private val spanCount: Int,    // Số cột trong GridLayout
+    private val spacing: Int,      // Kích thước khoảng cách (px)
+    private val includeEdge: Boolean // Bao gồm khoảng cách ở cạnh ngoài hay không
+) : RecyclerView.ItemDecoration() {
+
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val position = parent.getChildAdapterPosition(view) // Vị trí của item
+        val column = position % spanCount                  // Cột của item
+
+        if (includeEdge) {
+            outRect.left = spacing - column * spacing / spanCount
+            outRect.right = (column + 1) * spacing / spanCount
+
+            if (position < spanCount) { // Các item ở hàng đầu tiên
+                outRect.top = spacing
+            }
+            outRect.bottom = spacing // Khoảng cách dưới mỗi item
+        } else {
+            outRect.left = column * spacing / spanCount
+            outRect.right = spacing - (column + 1) * spacing / spanCount
+            if (position >= spanCount) {
+                outRect.top = spacing // Khoảng cách trên mỗi item (không bao gồm cạnh ngoài)
+            }
+        }
+    }
 }

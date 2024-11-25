@@ -9,8 +9,10 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://jitpack.io") }  // Add this line for JitPack
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -21,4 +23,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Zen Diary"
 include(":app")
- 

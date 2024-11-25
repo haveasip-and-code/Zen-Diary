@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/journalFragment">
+    app:startDestination="@+id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -29,6 +29,30 @@
     </fragment>
 
     <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.zendiary.ui.profile.EditProfileFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_editprofile" />
+
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.example.zendiary.ui.profile.PrivacyPolicyFragment"
+        android:label="Privacy Policy"
+        tools:layout="@layout/privacypolicy_fragment" />
+
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.example.zendiary.ui.profile.SupportFragment"
+        android:label="Privacy Policy"
+        tools:layout="@layout/support_fragment" />
+
+    <fragment
+        android:id="@+id/serviceFragment"
+        android:name="com.example.zendiary.ui.profile.ServiceFragment"
+        android:label="Privacy Policy"
+        tools:layout="@layout/service_fragment" />
+
+    <fragment
         android:id="@+id/navigation_explore"
         android:name="com.example.zendiary.ui.explore.ExploreFragment"
         android:label="@string/title_explore"
@@ -46,7 +70,24 @@
         <action
             android:id="@+id/action_navigation_profile_to_journalFragment"
             app:destination="@id/journalFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_privacyPolicyFragment"
+            app:destination="@id/privacyPolicyFragment" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_serviceFragment"
+            app:destination="@id/serviceFragment" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
+
     </fragment>
+
 
     <fragment
         android:id="@+id/journalFragment"
