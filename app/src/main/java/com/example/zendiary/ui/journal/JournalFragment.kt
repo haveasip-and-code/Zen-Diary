@@ -8,19 +8,10 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageButton
-import com.example.zendiary.R
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Layout
 import android.text.Spannable
@@ -29,8 +20,13 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -38,13 +34,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.zendiary.R
 import com.example.zendiary.backend.journal.ColorPickerDialog
 import com.example.zendiary.backend.journal.DrawingView
 import com.example.zendiary.backend.journal.ImagePickerBottomSheet
 import com.example.zendiary.backend.journal.PenToolBottomSheetDialog
+import com.google.android.gms.tasks.Task
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+
 
 class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelectedListener {
 
@@ -79,6 +83,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private lateinit var popupWindow: PopupWindow
     private lateinit var editText: EditText
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Kiểm tra xem popup đã hiển thị chưa từ SharedPreferences
@@ -88,6 +93,42 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
                 savePopupState(false)
             }
         }
+
+
+        getTextFromFirebase("userId_12345", "entryId_1", object : FirebaseCallback {
+            override fun onSuccess(text: String?) {
+                // Xử lý khi dữ liệu được lấy thành công
+                editText.setText(text);
+            }
+
+            override fun onFailure(errorMessage: String?) {
+                // Xử lý khi có lỗi xảy ra
+                Log.e("FirebaseText", "Error: $errorMessage")
+            }
+        })
+
+    }
+
+    fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallback) {
+        // Tham chiếu đến Firebase Database
+        val database = FirebaseDatabase.getInstance()
+        val textRef = database.getReference("users/$userId/entries/$entryId/text")
+
+        // Đọc dữ liệu từ Firebase
+        textRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val text = dataSnapshot.getValue(String::class.java) // Lấy giá trị dạng String
+                    callback.onSuccess(text) // Gọi callback khi đọc dữ liệu thành công
+                } else {
+                    callback.onFailure("Text not found!")
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                callback.onFailure(databaseError.message)
+            }
+        })
     }
 
 
@@ -208,6 +249,18 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
         view.findViewById<Button>(R.id.btn_save).setOnClickListener {
             val journalText = editText.text.toString()
+            saveTextToFirebase("userId_12345", "entryId_1", journalText, object : FirebaseCallback {
+                override fun onSuccess(text: String?) {
+                    Toast.makeText(requireContext(), "Saved successfully!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onFailure(errorMessage: String?) {
+                    Toast.makeText(requireContext(), "Failed to save: $errorMessage",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
             if (journalText.isNotEmpty()) {
                 viewModel.analyzeSentiment(journalText)
                 Toast.makeText(requireContext(), "Sentiment analysis completed", Toast.LENGTH_SHORT).show()
@@ -556,3 +609,44 @@ class GridSpacingItemDecoration(
         }
     }
 }
+
+fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallback) {
+    // Tham chiếu đến Firebase Database
+    val database = FirebaseDatabase.getInstance()
+    val textRef = database.getReference("users/$userId/entries/$entryId/text")
+
+    // Đọc dữ liệu từ Firebase
+    textRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            if (dataSnapshot.exists()) {
+                val text = dataSnapshot.getValue(String::class.java) // Lấy giá trị dạng String
+                callback.onSuccess(text) // Gọi callback khi đọc dữ liệu thành công
+            } else {
+                callback.onFailure("Text not found!")
+            }
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            callback.onFailure(databaseError.message)
+        }
+    })
+}
+
+fun saveTextToFirebase(userId: String, entryId: String, text: String?, callback: FirebaseCallback) {
+    val database = FirebaseDatabase.getInstance()
+    val textRef = database.getReference("users/$userId/entries/$entryId/text")
+
+    textRef.setValue(text).addOnCompleteListener { task: Task<Void?> ->
+        if (task.isSuccessful) {
+            callback.onSuccess(text)
+        } else {
+            callback.onFailure(task.exception!!.message)
+        }
+    }
+}
+
+interface FirebaseCallback {
+    fun onSuccess(text: String?) // Hàm được gọi khi dữ liệu được lấy thành công
+    fun onFailure(errorMessage: String?) // Hàm được gọi khi có lỗi xảy ra
+}
+
