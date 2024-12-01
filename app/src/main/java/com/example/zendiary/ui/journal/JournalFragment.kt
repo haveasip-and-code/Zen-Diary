@@ -34,6 +34,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -86,6 +88,13 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Access the navigation drawer from the parent activity
+        val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.drawer_layout)
+        view.findViewById<ImageButton>(R.id.ib_drawer_nav).setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
         // Kiểm tra xem popup đã hiển thị chưa từ SharedPreferences
         if (true) {//getPopupState()) {
             view?.post {
@@ -93,7 +102,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
                 savePopupState(false)
             }
         }
-
 
         getTextFromFirebase("userId_12345", "entryId_1", object : FirebaseCallback {
             override fun onSuccess(text: String?) {

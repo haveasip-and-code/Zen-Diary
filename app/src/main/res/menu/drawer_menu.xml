@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Divider above the Theme item -->
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_divider_above"
+            android:title=""
+            android:enabled="false"
+            android:icon="@android:color/transparent"
+            android:layout="@layout/menu_divider" />
+    </group>
+
+    <!-- Theme Item -->
+    <item
+        android:id="@+id/nav_theme"
+        android:icon="@drawable/ic_theme"
+        android:title="Theme" />
+
+    <!-- Sticker Item -->
+    <item
+        android:id="@+id/nav_sticker"
+        android:icon="@drawable/ic_sticker"
+        android:title="Sticker" />
+
+    <!-- Divider below the Sticker item -->
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_divider_below"
+            android:title=""
+            android:enabled="false"
+            android:icon="@android:color/transparent"
+            android:layout="@layout/menu_divider" />
+    </group>
+</menu>
