@@ -78,6 +78,12 @@ class ProfileFragment : Fragment() {
             // Sử dụng NavController để điều hướng sang EditProfileFragment
             findNavController().navigate(R.id.action_profileFragment_to_helpFragment)
         }
+
+        val reminder: LinearLayout = binding.reminderButton // Lấy reference của nút "Edit Profile"
+        reminder.setOnClickListener {
+            // Sử dụng NavController để điều hướng sang EditProfileFragment
+            findNavController().navigate(R.id.action_profileFragment_to_reminder)
+        }
         return root
     }
 

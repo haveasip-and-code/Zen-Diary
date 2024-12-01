@@ -35,6 +35,12 @@
         tools:layout="@layout/fragment_editprofile" />
 
     <fragment
+        android:id="@+id/reminderTime"
+        android:name="com.example.zendiary.ui.profile.ReminderFragment"
+        android:label="Reminder"
+        tools:layout="@layout/fragment_reminder" />
+
+    <fragment
         android:id="@+id/privacyPolicyFragment"
         android:name="com.example.zendiary.ui.profile.PrivacyPolicyFragment"
         android:label="Privacy Policy"
@@ -81,6 +87,10 @@
         <action
             android:id="@+id/action_profileFragment_to_serviceFragment"
             app:destination="@id/serviceFragment" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_reminder"
+            app:destination="@id/reminderTime" />
 
         <action
             android:id="@+id/action_profileFragment_to_helpFragment"
