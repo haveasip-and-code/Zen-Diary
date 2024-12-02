@@ -29,6 +29,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/pincode"
+        android:name="com.example.zendiary.ui.home.PINFragment"
+        android:label="PINCode"
+        tools:layout="@layout/fragment_pincode" />
+
+    <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.zendiary.ui.profile.EditProfileFragment"
         android:label="Edit Profile"
@@ -95,6 +101,11 @@
         <action
             android:id="@+id/action_profileFragment_to_helpFragment"
             app:destination="@id/helpFragment" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_pinCode"
+            app:destination="@id/pincode" />
+
 
     </fragment>
 

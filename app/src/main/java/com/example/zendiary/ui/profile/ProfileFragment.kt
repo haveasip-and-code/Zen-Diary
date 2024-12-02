@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -52,38 +53,48 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        val privacyPolicyButton: LinearLayout = binding.privacyPolicyButton // Lấy reference của nút "Edit Profile"
+        // Thiết lập sự kiện click cho nút "Privacy Policy"
+        val privacyPolicyButton: LinearLayout = binding.privacyPolicyButton
         privacyPolicyButton.setOnClickListener {
-            // Sử dụng NavController để điều hướng sang EditProfileFragment
+            // Điều hướng sang PrivacyPolicyFragment
             findNavController().navigate(R.id.action_profileFragment_to_privacyPolicyFragment)
         }
 
-
         // Thiết lập sự kiện click cho nút "Edit Profile"
-        val editProfileButton: LinearLayout = binding.editProfileButton // Lấy reference của nút "Edit Profile"
+        val editProfileButton: LinearLayout = binding.editProfileButton
         editProfileButton.setOnClickListener {
-            // Sử dụng NavController để điều hướng sang EditProfileFragment
+            // Điều hướng sang EditProfileFragment
             findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
 
-        // Thiết lập sự kiện click cho nút "Edit Profile"
-        val serviceButton: LinearLayout = binding.serviceButton // Lấy reference của nút "Edit Profile"
+        // Thiết lập sự kiện click cho nút "Service"
+        val serviceButton: LinearLayout = binding.serviceButton
         serviceButton.setOnClickListener {
-            // Sử dụng NavController để điều hướng sang EditProfileFragment
+            // Điều hướng sang ServiceFragment
             findNavController().navigate(R.id.action_profileFragment_to_serviceFragment)
         }
 
-        val helpButton: LinearLayout = binding.helpButton // Lấy reference của nút "Edit Profile"
+        // Thiết lập sự kiện click cho nút "Help"
+        val helpButton: LinearLayout = binding.helpButton
         helpButton.setOnClickListener {
-            // Sử dụng NavController để điều hướng sang EditProfileFragment
+            // Điều hướng sang HelpFragment
             findNavController().navigate(R.id.action_profileFragment_to_helpFragment)
         }
 
-        val reminder: LinearLayout = binding.reminderButton // Lấy reference của nút "Edit Profile"
+        // Thiết lập sự kiện click cho nút "Reminder"
+        val reminder: LinearLayout = binding.reminderButton
         reminder.setOnClickListener {
-            // Sử dụng NavController để điều hướng sang EditProfileFragment
+            // Điều hướng sang ReminderFragment
             findNavController().navigate(R.id.action_profileFragment_to_reminder)
         }
+
+        // Sử dụng ViewBinding thay vì findViewById cho logout_button
+        val logoutButton = binding.logoutButton
+        logoutButton.setOnClickListener {
+            // Điều hướng sang PinCodeFragment
+            findNavController().navigate(R.id.action_profileFragment_to_pinCode)
+        }
+
         return root
     }
 

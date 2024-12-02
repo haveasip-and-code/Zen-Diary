@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background_editprofile" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/pincode_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/josefin_sans_bold"
+            android:gravity="center"
+            android:text="Enter PIN"
+            android:textColor="#000"
+            android:textSize="20sp"
+            app:layout_constraintVertical_bias="0.15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/user_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/josefin_sans_medium"
+            android:gravity="center"
+            android:text="Forgot Your PIN Code?"
+            android:textColor="#666"
+            android:textSize="14sp"
+            app:layout_constraintVertical_bias="0.25"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn0_container" />
+
+        <!-- Button 1 -->
+        <FrameLayout
+            android:id="@+id/btn1_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintBottom_toBottomOf="@+id/btn2_container"
+            app:layout_constraintEnd_toStartOf="@+id/btn2_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn2_container">
+
+            <ImageButton
+                android:id="@+id/btn1"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 1"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 2 -->
+        <FrameLayout
+            android:id="@+id/btn2_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pincode_text"
+            app:layout_constraintVertical_bias="0.17">
+
+            <ImageButton
+                android:id="@+id/btn2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 2"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 3 -->
+        <FrameLayout
+            android:id="@+id/btn3_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintBottom_toBottomOf="@+id/btn2_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn2_container"
+            app:layout_constraintTop_toTopOf="@+id/btn2_container">
+
+            <ImageButton
+                android:id="@+id/btn3"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 3"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 4 -->
+        <FrameLayout
+            android:id="@+id/btn4_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btn1_container"
+            app:layout_constraintStart_toStartOf="@+id/btn1_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn1_container"
+            app:layout_constraintVertical_bias="0">
+
+            <ImageButton
+                android:id="@+id/btn4"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 4"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="4"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 5 -->
+        <FrameLayout
+            android:id="@+id/btn5_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/btn4_container"
+            app:layout_constraintEnd_toEndOf="@+id/btn2_container"
+            app:layout_constraintStart_toEndOf="@+id/btn1_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn1_container">
+
+            <ImageButton
+                android:id="@+id/btn5"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 5"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="5"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 6 -->
+        <FrameLayout
+            android:id="@+id/btn6_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/btn5_container"
+            app:layout_constraintEnd_toEndOf="@+id/btn3_container"
+            app:layout_constraintStart_toEndOf="@+id/btn5_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn2_container">
+
+            <ImageButton
+                android:id="@+id/btn6"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 6"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="6"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 7 -->
+        <FrameLayout
+            android:id="@+id/btn7_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btn4_container"
+            app:layout_constraintStart_toStartOf="@+id/btn4_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn4_container">
+
+            <ImageButton
+                android:id="@+id/btn7"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 7"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="7"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 8 -->
+        <FrameLayout
+            android:id="@+id/btn8_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/btn7_container"
+            app:layout_constraintEnd_toEndOf="@+id/btn5_container"
+            app:layout_constraintStart_toEndOf="@+id/btn4_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn5_container">
+
+            <ImageButton
+                android:id="@+id/btn8"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 8"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="8"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 9 -->
+        <FrameLayout
+            android:id="@+id/btn9_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/btn8_container"
+            app:layout_constraintEnd_toEndOf="@+id/btn6_container"
+            app:layout_constraintStart_toEndOf="@+id/btn8_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn6_container">
+
+            <ImageButton
+                android:id="@+id/btn9"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 9"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="9"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Button 0 -->
+        <FrameLayout
+            android:id="@+id/btn0_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btn8_container"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/btn7_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn7_container">
+
+            <ImageButton
+                android:id="@+id/btn0"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/button_background_pin"
+                android:contentDescription="Button 0"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/josefin_sans_medium"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+        </FrameLayout>
+
+        <!-- Backspace button -->
+        <ImageButton
+            android:id="@+id/imageButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background_pin"
+            android:src="@drawable/button_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/btn0_container"
+            app:layout_constraintEnd_toEndOf="@+id/btn3_container"
+            app:layout_constraintStart_toEndOf="@+id/btn0_container"
+            app:layout_constraintTop_toBottomOf="@+id/btn8_container" />
+
+        <LinearLayout
+            android:id="@+id/dotsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="@color/transparent"
+            app:layout_constraintBottom_toTopOf="@+id/btn2_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pincode_text">
+
+            <View
+                android:id="@+id/dot1"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/circle_shape" />
+
+            <View
+                android:id="@+id/dot2"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/circle_shape" />
+
+            <View
+                android:id="@+id/dot3"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/circle_shape" />
+
+            <View
+                android:id="@+id/dot4"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@drawable/circle_shape" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
