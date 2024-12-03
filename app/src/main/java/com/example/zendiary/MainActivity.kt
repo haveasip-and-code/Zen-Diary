@@ -6,6 +6,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -30,7 +31,11 @@ class MainActivity : AppCompatActivity() {
 
         // Define the fragments where the BottomNavigationView should be hidden
         val fragmentsToHideBottomNav = setOf(
-            R.id.journalFragment
+            R.id.journalFragment,
+            R.id.serviceFragment,
+            R.id.editProfileFragment,
+            R.id.reminderTime,
+            R.id.pincode
         )
 
         // Passing each menu ID as a set of Ids because each
