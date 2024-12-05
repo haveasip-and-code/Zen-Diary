@@ -6,7 +6,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -65,9 +64,9 @@ class MainActivity : AppCompatActivity() {
 
         val navViewDrawer: NavigationView = findViewById(R.id.nav_view_drawer)
         navViewDrawer.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-
-            }
+//            when (menuItem.itemId) {
+//
+//            }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
@@ -93,17 +92,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun updateDrawerAccessibility() {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
-
-        if (currentFragment is JournalFragment) {
-            // Enable the drawer only in the Journal Fragment
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        } else {
-            // Disable the drawer in all other fragments
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        }
-    }
-
 }
