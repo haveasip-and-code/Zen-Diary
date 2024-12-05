@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zendiary.databinding.ActivityMainBinding
+import com.example.zendiary.ui.journal.JournalFragment
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -60,17 +61,6 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.journalFragment)
         }
 
-        // Add a listener to show/hide BottomNavigationView based on the destination
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id in fragmentsToHideBottomNav) {
-                navView.visibility = View.GONE
-                binding.journalButton.visibility = View.GONE
-            } else {
-                navView.visibility = View.VISIBLE
-                binding.journalButton.visibility = View.VISIBLE
-            }
-        }
-
         drawerLayout = findViewById(R.id.drawer_layout)
 
         val navViewDrawer: NavigationView = findViewById(R.id.nav_view_drawer)
@@ -81,5 +71,39 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
+        // Add a listener to show/hide BottomNavigationView based on the destination
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id in fragmentsToHideBottomNav) {
+                navView.visibility = View.GONE
+                binding.journalButton.visibility = View.GONE
+            } else {
+                navView.visibility = View.VISIBLE
+                binding.journalButton.visibility = View.VISIBLE
+            }
+            when (destination.id) {
+                R.id.journalFragment -> {
+                    // Enable the drawer for JournalFragment
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                }
+                else -> {
+                    // Disable the drawer for other fragments
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                }
+            }
+        }
     }
+
+    private fun updateDrawerAccessibility() {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
+
+        if (currentFragment is JournalFragment) {
+            // Enable the drawer only in the Journal Fragment
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        } else {
+            // Disable the drawer in all other fragments
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
+    }
+
 }

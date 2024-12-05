@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.espresso.core)
     implementation(libs.firebase.database)
+    implementation(libs.mpandroidchart.vv310)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

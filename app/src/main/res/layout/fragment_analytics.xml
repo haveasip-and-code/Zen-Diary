@@ -1,22 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.analytics.AnalyticsFragment">
+    android:background="@color/primary_background">
 
-    <TextView
-        android:id="@+id/text_analytics"
+    <!--Top bar section -->
+    <LinearLayout
+        android:id="@+id/llTopBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_top_bar_analytics">
+
+        <!-- Day/Week Toggle -->
+        <LinearLayout
+            android:id="@+id/llToggleContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="30dp">
+            <LinearLayout
+                android:id="@+id/llDayWeekToggleContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_toggle_button"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnDay"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:text="Day"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:background="@drawable/bg_round_button"
+                    android:backgroundTint="#4D5036" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnWeek"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:text="Week"
+                    android:textColor="@color/primary_home_text"
+                    android:textAllCaps="false"
+                    android:background="@drawable/bg_round_button"
+                    android:backgroundTint="@color/transparent"/>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/ib_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Calendar"
+                android:src="@drawable/ic_calendar"
+                android:background="@drawable/bg_toggle_button"
+                android:padding="10dp"
+                android:layout_marginStart="5dp"/>
+        </LinearLayout>
+
+        <!-- Calendar -->
+        <RelativeLayout
+            android:id="@+id/rlCalendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <!-- Seven-Day Week Calendar -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvWeekDays"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:clipToPadding="false"
+                android:visibility="gone" />
+
+            <!-- Week Navigation -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:visibility="visible" >
+
+                <ImageButton
+                    android:id="@+id/btnPreviousWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Previous Week"
+                    android:src="@drawable/ic_arrow_left"
+                    android:background="@drawable/bg_round_button"
+                    android:backgroundTint="@color/white"
+                    android:padding="3dp"/>
+
+                <TextView
+                    android:id="@+id/tvSelectedWeek"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Dec 2 - Dec 8"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary_home_text"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_week_period"
+                    android:padding="5dp"
+                    android:layout_marginHorizontal="50dp"/>
+
+                <ImageButton
+                    android:id="@+id/btnNextWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Following Week"
+                    android:src="@drawable/ic_arrow_right"
+                    android:background="@drawable/bg_round_button"
+                    android:backgroundTint="@color/white"
+                    android:padding="3dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Recommendations -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecommendations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llTopBarContainer"
+        android:layout_margin="30dp"
+        android:visibility="gone" />
+
+    <!-- Mood Flow Chart -->
+    <TextView
+        android:id="@+id/tvmoodflowtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Moodflow"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textStyle="bold"
+        android:textColor="@color/primary_home_text"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/llTopBarContainer" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChartMoodFlow"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/tvmoodflowtitle"
+        android:layout_marginHorizontal="30dp"/>
+
+    <!-- Mood Bar -->
+    <TextView
+        android:id="@+id/tvmoodbartitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Moodflow"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_home_text"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/lineChartMoodFlow" />
+
+    <LinearLayout
+        android:id="@+id/llMoodBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_below="@id/tvmoodbartitle" >
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/negative_color" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/neutral_color" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/positive_color" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llMoodBarDesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginHorizontal="50dp"
+        android:layout_below="@id/llMoodBarContainer" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="-1. Negative"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0. Neutral"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="1. Positive"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>
+
