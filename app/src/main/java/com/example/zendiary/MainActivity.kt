@@ -6,12 +6,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zendiary.databinding.ActivityMainBinding
+import com.example.zendiary.ui.journal.JournalFragment
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -60,6 +60,17 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.journalFragment)
         }
 
+        drawerLayout = findViewById(R.id.drawer_layout)
+
+        val navViewDrawer: NavigationView = findViewById(R.id.nav_view_drawer)
+        navViewDrawer.setNavigationItemSelectedListener { menuItem ->
+//            when (menuItem.itemId) {
+//
+//            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+
         // Add a listener to show/hide BottomNavigationView based on the destination
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id in fragmentsToHideBottomNav) {
@@ -69,17 +80,16 @@ class MainActivity : AppCompatActivity() {
                 navView.visibility = View.VISIBLE
                 binding.journalButton.visibility = View.VISIBLE
             }
-        }
-
-        drawerLayout = findViewById(R.id.drawer_layout)
-
-        val navViewDrawer: NavigationView = findViewById(R.id.nav_view_drawer)
-        navViewDrawer.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-
+            when (destination.id) {
+                R.id.journalFragment -> {
+                    // Enable the drawer for JournalFragment
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                }
+                else -> {
+                    // Disable the drawer for other fragments
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                }
             }
-            drawerLayout.closeDrawer(GravityCompat.START)
-            true
         }
     }
 }
