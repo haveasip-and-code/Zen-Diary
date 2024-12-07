@@ -2,6 +2,7 @@ package com.example.zendiary.ui.journal
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -38,6 +39,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.R
@@ -50,13 +52,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlin.properties.Delegates
 
 
 class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelectedListener {
-
-    companion object {
-        fun newInstance() = JournalFragment()
-    }
 
     private lateinit var viewModel: JournalViewModel
 
@@ -75,17 +74,22 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private lateinit var imagePreviewContainer: LinearLayout
     private lateinit var ivImagePreview: ImageView
 
-    private val CAMERA_PERMISSION_REQUEST_CODE = 1001
-    private val STORAGE_PERMISSION_REQUEST_CODE = 1002
-    private val CAMERA_REQUEST = 101
-    private val PICK_IMAGE_REQUEST = 102
+    private val cameraPermissionRequestCode = 1001
+    private val cameraRequest = 101
+    private val pickImageRequest = 102
 
     private var selectedImageUri: Uri? = null
 
     private lateinit var popupWindow: PopupWindow
     private lateinit var editText: EditText
 
+    private var userId = "userId_12345"
+    private var entryId = "entryId_1"
 
+    private lateinit var journalText: String
+
+    private var sentimentScore by Delegates.notNull<Float>()
+    private lateinit var sentimentLabel: String
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -96,17 +100,15 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         }
 
         // Kiểm tra xem popup đã hiển thị chưa từ SharedPreferences
-        if (true) {//getPopupState()) {
-            view?.post {
-                //showPopup()
-                savePopupState(false)
-            }
+        view.post {
+            //showPopup()
+            savePopupState(false)
         }
 
-        getTextFromFirebase("userId_12345", "entryId_1", object : FirebaseCallback {
-            override fun onSuccess(text: String?) {
+        getTextFromFirebase(userId, entryId, object : FirebaseCallback {
+            override fun onSuccess(result: String?) {
                 // Xử lý khi dữ liệu được lấy thành công
-                editText.setText(text);
+                editText.setText(result)
             }
 
             override fun onFailure(errorMessage: String?) {
@@ -117,7 +119,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
     }
 
-    fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallback) {
+    private fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallback) {
         // Tham chiếu đến Firebase Database
         val database = FirebaseDatabase.getInstance()
         val textRef = database.getReference("users/$userId/entries/$entryId/text")
@@ -256,28 +258,166 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         }
 
         view.findViewById<Button>(R.id.btn_save).setOnClickListener {
-            val journalText = editText.text.toString()
-            saveTextToFirebase("userId_12345", "entryId_1", journalText, object : FirebaseCallback {
-                override fun onSuccess(text: String?) {
-                    Toast.makeText(requireContext(), "Saved successfully!", Toast.LENGTH_SHORT)
-                        .show()
-                }
+            journalText = editText.text.toString()
 
-                override fun onFailure(errorMessage: String?) {
-                    Toast.makeText(requireContext(), "Failed to save: $errorMessage",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
             if (journalText.isNotEmpty()) {
                 viewModel.analyzeSentiment(journalText)
                 Toast.makeText(requireContext(), "Sentiment analysis completed", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), "Please enter text to analyze", Toast.LENGTH_SHORT).show()
             }
+
+            sentimentScore = viewModel.sentimentResult.value?.get("compound") ?: 0f
+
+            showSentimentDialog(sentimentScore)
+
+            sentimentLabel = when {
+                sentimentScore > 0.1 -> "positive"
+                sentimentScore < -0.1 -> "negative"
+                else -> "neutral"
+            }
+
+
         }
 
     }
+
+    private fun showSentimentDialog(sentimentScore: Float) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_sentiment_result, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        // Bind views
+        val ivSentimentIcon = dialogView.findViewById<ImageView>(R.id.ivSentimentIcon)
+        val tvSentimentResult = dialogView.findViewById<TextView>(R.id.tvSentimentResult)
+        val tvSentimentScore = dialogView.findViewById<TextView>(R.id.tvSentimentScore)
+        val tvNotes = dialogView.findViewById<TextView>(R.id.tvNotes)
+        val tvNegativeEntry = dialogView.findViewById<TextView>(R.id.tvNegativeEntry)
+        val btnHome = dialogView.findViewById<Button>(R.id.btnHome)
+        val btnKeep = dialogView.findViewById<Button>(R.id.btnKeep)
+        val btnDelete = dialogView.findViewById<Button>(R.id.btnDelete)
+
+        // Set sentiment score
+        tvSentimentScore.text = sentimentScore.toString()
+
+        // Update UI based on sentiment result
+        when {
+            sentimentScore < -0.1 -> {
+                ivSentimentIcon.setImageResource(R.drawable.ic_sentiment_negative)
+                tvSentimentResult.text = "Negative"
+                tvNotes.text = "It seems like you're feeling down."
+                btnHome.visibility = View.GONE
+                tvNegativeEntry.visibility = View.VISIBLE
+                btnKeep.visibility = View.VISIBLE
+                btnDelete.visibility = View.VISIBLE
+            }
+            sentimentScore > 0.1 -> {
+                ivSentimentIcon.setImageResource(R.drawable.ic_sentiment_positive)
+                tvSentimentResult.text = "Positive"
+                tvNotes.text = "Your entry is positive. Keep up the good work!"
+                btnHome.visibility = View.VISIBLE
+                tvNegativeEntry.visibility = View.GONE
+                btnKeep.visibility = View.GONE
+                btnDelete.visibility = View.GONE
+            }
+            else -> {
+                ivSentimentIcon.setImageResource(R.drawable.ic_sentiment_neutral)
+                tvSentimentResult.text = "Neutral"
+                tvNotes.text = "Your entry seems neutral. No action is needed."
+                btnHome.visibility = View.VISIBLE
+                tvNegativeEntry.visibility = View.GONE
+                btnKeep.visibility = View.GONE
+                btnDelete.visibility = View.GONE
+            }
+        }
+
+        // Handle button clicks
+        btnHome.setOnClickListener {
+            saveJournalEntry()
+            dialog.dismiss()
+
+            // Navigate to the Home screen
+            findNavController().navigate(R.id.navigation_home)
+        }
+
+        btnKeep.setOnClickListener {
+            saveJournalEntry()
+            dialog.dismiss()
+
+            // Navigate to the Home screen
+            findNavController().navigate(R.id.navigation_home)
+        }
+
+        btnDelete.setOnClickListener {
+            dialog.dismiss()
+            showDeleteConfirmationDialog()
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_confirm_delete, null)
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+        val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirm)
+
+        btnCancel.setOnClickListener {
+            // Dismiss the dialog
+            alertDialog.dismiss()
+        }
+
+        btnConfirm.setOnClickListener {
+            // Delete the entry from Firebase
+            deleteJournalEntry()
+            alertDialog.dismiss()
+
+            // Navigate to the Deletion Confirmation screen
+            findNavController().navigate(R.id.deletionConfirmationFragment)
+        }
+        alertDialog.show()
+    }
+
+    private fun saveJournalEntry() {
+        saveEntryToFirebase(
+            userId = "12345",
+            entryId = "1",
+            text = journalText,
+            sentimentScore = sentimentScore,
+            sentimentLabel = sentimentLabel,
+            object : FirebaseCallback {
+                override fun onSuccess(result: String?) {
+                    if (result != null) {
+                        Log.d("Firebase", result)
+                    }
+                }
+
+                override fun onFailure(errorMessage: String?) {
+                    Log.e("Firebase", errorMessage ?: "Error occurred")
+                }
+            }
+        )
+        showToast("Journal entry saved!")
+    }
+
+    private fun deleteJournalEntry() {
+//        viewModel.deleteEntry()
+        showToast("Journal entry deleted!")
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
 
     private fun observeSentimentResult() {
         viewModel.sentimentResult.observe(viewLifecycleOwner) { sentiment ->
@@ -317,7 +457,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Open gallery to pick an image
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        startActivityForResult(intent, pickImageRequest)
     }
 
     // This method is invoked when the camera option is selected
@@ -328,14 +468,14 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
             openCamera()
         } else {
             // Request camera permission
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), cameraPermissionRequestCode)
         }
     }
 
     // This method opens the camera to take a picture
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, CAMERA_REQUEST)
+        startActivityForResult(intent, cameraRequest)
     }
 
     // Handle the result after image is picked
@@ -343,11 +483,11 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                PICK_IMAGE_REQUEST -> {
+                pickImageRequest -> {
                     selectedImageUri = data?.data
                     insertImageIntoPreview(selectedImageUri)
                 }
-                CAMERA_REQUEST -> {
+                cameraRequest -> {
                     val photo: Bitmap = data?.extras?.get("data") as Bitmap
                     insertImageIntoPreview(photo)
                 }
@@ -562,8 +702,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Show the PopupWindow at the center of the screen
         popupWindow.showAtLocation(requireView(), Gravity.CENTER, 0, 0)
     }
-
-
 }
 
 class PopupAdapter(
@@ -640,21 +778,39 @@ fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallb
     })
 }
 
-fun saveTextToFirebase(userId: String, entryId: String, text: String?, callback: FirebaseCallback) {
+fun saveEntryToFirebase(
+    userId: String,
+    entryId: String,
+    text: String?,
+    sentimentScore: Float,
+    sentimentLabel: String,
+    callback: FirebaseCallback
+) {
     val database = FirebaseDatabase.getInstance()
-    val textRef = database.getReference("users/$userId/entries/$entryId/text")
+    val entryRef = database.getReference("users/$userId/entries/$entryId")
 
-    textRef.setValue(text).addOnCompleteListener { task: Task<Void?> ->
+    // Create a map to hold the data
+    val entryData = mapOf(
+        "text" to text,
+        "sentiment" to mapOf(
+            "label" to sentimentLabel,
+            "score" to sentimentScore
+        )
+    )
+
+    // Save the data to Firebase
+    entryRef.setValue(entryData).addOnCompleteListener { task: Task<Void?> ->
         if (task.isSuccessful) {
-            callback.onSuccess(text)
+            callback.onSuccess("Entry saved successfully.")
         } else {
-            callback.onFailure(task.exception!!.message)
+            callback.onFailure(task.exception?.message ?: "Unknown error")
         }
     }
 }
 
+
 interface FirebaseCallback {
-    fun onSuccess(text: String?) // Hàm được gọi khi dữ liệu được lấy thành công
+    fun onSuccess(result: String?) // Hàm được gọi khi dữ liệu được lấy thành công
     fun onFailure(errorMessage: String?) // Hàm được gọi khi có lỗi xảy ra
 }
 

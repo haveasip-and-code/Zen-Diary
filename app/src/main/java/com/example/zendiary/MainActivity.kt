@@ -11,7 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zendiary.databinding.ActivityMainBinding
-import com.example.zendiary.ui.journal.JournalFragment
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +34,8 @@ class MainActivity : AppCompatActivity() {
             R.id.serviceFragment,
             R.id.editProfileFragment,
             R.id.reminderTime,
-            R.id.pincode
+            R.id.pincode,
+            R.id.deletionConfirmationFragment
         )
 
         // Passing each menu ID as a set of Ids because each
