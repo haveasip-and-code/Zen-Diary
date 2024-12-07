@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/ivSentimentIcon">
+            android:layout_toEndOf="@id/ivSentimentIcon">
 
             <!-- Sentiment Analysis Result -->
             <TextView
@@ -154,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="13dp">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnDelete"

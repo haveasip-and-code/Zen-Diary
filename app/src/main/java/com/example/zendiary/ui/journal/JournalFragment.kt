@@ -108,7 +108,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         getTextFromFirebase(userId, entryId, object : FirebaseCallback {
             override fun onSuccess(result: String?) {
                 // Xử lý khi dữ liệu được lấy thành công
-                editText.setText(result);
+                editText.setText(result)
             }
 
             override fun onFailure(errorMessage: String?) {
