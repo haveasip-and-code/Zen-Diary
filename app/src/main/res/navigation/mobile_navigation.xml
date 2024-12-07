@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/journalFragment">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -114,11 +114,26 @@
         android:id="@+id/journalFragment"
         android:name="com.example.zendiary.ui.journal.JournalFragment"
         android:label="fragment_journal"
-        tools:layout="@layout/fragment_journal" />
+        tools:layout="@layout/fragment_journal" >
+        <action
+            android:id="@+id/action_journalFragment_to_deletionConfirmationFragment"
+            app:destination="@id/deletionConfirmationFragment" />
+        <action
+            android:id="@+id/action_journalFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.example.zendiary.ui.home.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/deletionConfirmationFragment"
+        android:name="com.example.zendiary.ui.journal.DeletionConfirmationFragment"
+        android:label="DeletionConfirmationFragment" >
+        <action
+            android:id="@+id/action_deletionConfirmationFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 </navigation>

@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
             R.id.serviceFragment,
             R.id.editProfileFragment,
             R.id.reminderTime,
-            R.id.pincode
+            R.id.pincode,
+            R.id.deletionConfirmationFragment
         )
 
         // Passing each menu ID as a set of Ids because each
