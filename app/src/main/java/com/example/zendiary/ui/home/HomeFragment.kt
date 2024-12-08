@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -35,11 +36,16 @@ class HomeFragment : Fragment() {
         database = FirebaseDatabase.getInstance()
 
         // Initialize RecyclerView Adapter
-        adapter = NotesAdapter(notes)
+        adapter = NotesAdapter(notes) { note ->
+            // Replace with your desired action, such as navigating to a detail view
+            val noteDetails = "ID: ${note.entryId}, Text: ${note.previewText}, Date: ${note.date}"
+            Toast.makeText(requireContext(), noteDetails, Toast.LENGTH_SHORT).show()
+        }
         binding.recyclerViewNotes.adapter = adapter
 
         // Set GridLayoutManager with 2 columns
         binding.recyclerViewNotes.layoutManager = GridLayoutManager(requireContext(), 2)
+
 
 //        // Add padding at the bottom of the RecyclerView (optional)
 //        binding.recyclerViewNotes.addItemDecoration(object : RecyclerView.ItemDecoration() {
@@ -69,13 +75,17 @@ class HomeFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 notes.clear() // Clear the current list to avoid duplication
                 for (entrySnapshot in snapshot.children) {
+                    // Get the entry ID (the key of the current entry in the database)
+                    val entryId = entrySnapshot.key ?: "Unknown ID"
+
+                    // Get other details of the note
                     val header = entrySnapshot.child("header").getValue(String::class.java) ?: "Header"
                     val previewText = entrySnapshot.child("text").getValue(String::class.java) ?: "No text available"
                     val date = entrySnapshot.child("date").getValue(String::class.java) ?: "Unknown Date"
                     val imageUrl = entrySnapshot.child("imageUrl").getValue(String::class.java)
 
-                    // Add the fetched note to the list
-                    notes.add(Note(header, previewText, date, imageUrl))
+                    // Add the fetched note to the list, now including the entryId
+                    notes.add(Note(header, previewText, date, imageUrl, entryId))
                 }
                 adapter.notifyDataSetChanged() // Notify the adapter about data changes
             }
@@ -85,6 +95,7 @@ class HomeFragment : Fragment() {
             }
         })
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

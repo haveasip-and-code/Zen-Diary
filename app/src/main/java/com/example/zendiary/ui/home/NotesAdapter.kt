@@ -8,11 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.R
 
-class NotesAdapter(private val notes: List<Note>) :
-    RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
+class NotesAdapter(
+    private val notes: List<Note>,
+    private val onNoteClicked: (Note) -> Unit
+) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val header: TextView = itemView.findViewById(R.id.note_header) // Add header reference
+        val header: TextView = itemView.findViewById(R.id.note_header)
         val previewText: TextView = itemView.findViewById(R.id.note_preview_text)
         val date: TextView = itemView.findViewById(R.id.note_date)
         val noteImage: ImageView = itemView.findViewById(R.id.note_image)
@@ -26,18 +28,24 @@ class NotesAdapter(private val notes: List<Note>) :
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val currentNote = notes[position]
-        holder.header.text = currentNote.header // Set header text
-        holder.previewText.text = currentNote.previewText
-        holder.date.text = currentNote.date
 
-        // Show or hide the image based on whether it's available
-        if (currentNote.imageUrl.isNullOrEmpty()) {
-            holder.noteImage.visibility = View.GONE
-        } else {
-            holder.noteImage.visibility = View.VISIBLE
-            // Load the image (use a library like Glide or Coil for loading images)
-            // Example using Glide:
-            // Glide.with(holder.itemView.context).load(note.imageUrl).into(holder.noteImage)
+        holder.header.text = currentNote.header ?: "No Header"
+        holder.previewText.text = currentNote.previewText ?: "No Preview"
+        holder.date.text = currentNote.date ?: "No Date"
+
+//        if (currentNote.imageUrl.isNullOrEmpty()) {
+//            holder.noteImage.visibility = View.GONE
+//        } else {
+//            holder.noteImage.visibility = View.VISIBLE
+//            Glide.with(holder.itemView.context)
+//                .load(currentNote.imageUrl)
+//                .placeholder(R.drawable.placeholder_image)
+//                .error(R.drawable.error_image)
+//                .into(holder.noteImage)
+//        }
+
+        holder.itemView.setOnClickListener {
+            onNoteClicked(currentNote)
         }
     }
 
