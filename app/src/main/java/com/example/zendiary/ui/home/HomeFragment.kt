@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.databinding.FragmentHomeBinding
+import com.example.zendiary.ui.journal.JournalFragment
 import com.google.firebase.database.*
+import androidx.navigation.fragment.findNavController
 
 class HomeFragment : Fragment() {
 
@@ -37,11 +39,19 @@ class HomeFragment : Fragment() {
 
         // Initialize RecyclerView Adapter
         adapter = NotesAdapter(notes) { note ->
-            // Replace with your desired action, such as navigating to a detail view
-            val noteDetails = "ID: ${note.entryId}, Text: ${note.previewText}, Date: ${note.date}"
-            Toast.makeText(requireContext(), noteDetails, Toast.LENGTH_SHORT).show()
+            val journalFragment = JournalFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("note", note) // Ensure `note` implements Parcelable
+                }
+            }
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, journalFragment)
+                .addToBackStack(null) // Optional: to allow back navigation
+                .commit()
         }
         binding.recyclerViewNotes.adapter = adapter
+
 
         // Set GridLayoutManager with 2 columns
         binding.recyclerViewNotes.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -101,4 +111,10 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
+
+
 }
+
+

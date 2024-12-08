@@ -47,6 +47,8 @@ import com.example.zendiary.backend.journal.ColorPickerDialog
 import com.example.zendiary.backend.journal.DrawingView
 import com.example.zendiary.backend.journal.ImagePickerBottomSheet
 import com.example.zendiary.backend.journal.PenToolBottomSheetDialog
+import com.example.zendiary.databinding.FragmentJournalBinding
+import com.example.zendiary.ui.home.Note
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -69,6 +71,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private lateinit var ibShapePicker: ImageButton
     private lateinit var ibPenPicker: ImageButton
     private lateinit var ibEraser: ImageButton
+    private lateinit var note: Note
 
     private lateinit var ibAddImage: ImageButton
     private lateinit var imagePreviewContainer: LinearLayout
@@ -162,6 +165,21 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+
+        // Retrieve the Note from the arguments
+        arguments?.let {
+            note = it.getParcelable("note")!!
+        }
+
+        // Use the Note object to populate UI
+
+        entryId = note.entryId  // Show the entry ID
+
+
+
+
         viewModel = ViewModelProvider(this)[JournalViewModel::class.java]
 
         // Inflate the layout for this fragment
