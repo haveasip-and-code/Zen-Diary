@@ -38,18 +38,18 @@ class HomeFragment : Fragment() {
         database = FirebaseDatabase.getInstance()
 
         // Initialize RecyclerView Adapter
-//        adapter = NotesAdapter(notes) { note ->
-//            val journalFragment = JournalFragment().apply {
-//                arguments = Bundle().apply {
-//                    putParcelable("note", note) // Ensure `note` implements Parcelable
-//                }
-//            }
+        adapter = NotesAdapter(notes) { note ->
+            val journalFragment = JournalFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("note", note) // Ensure `note` implements Parcelable
+                }
+            }
 //
 //            requireActivity().supportFragmentManager.beginTransaction()
 //                .replace(R.id.nav_host_fragment_activity_main, journalFragment)
 //                .addToBackStack(null) // Optional: to allow back navigation
 //                .commit()
-//        }
+        }
         binding.recyclerViewNotes.adapter = adapter
 
 
