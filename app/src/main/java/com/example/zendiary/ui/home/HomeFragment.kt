@@ -45,10 +45,10 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, journalFragment)
-                .addToBackStack(null) // Optional: to allow back navigation
-                .commit()
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.nav_host_fragment_activity_main, journalFragment)
+//                .addToBackStack(null) // Optional: to allow back navigation
+//                .commit()
         }
         binding.recyclerViewNotes.adapter = adapter
 
