@@ -180,7 +180,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         } else {
             Log.e("JournalFragment", "Note is missing from arguments!")
             // Provide a fallback value or handle the error
-            entryId = "default_entry_id"
+            entryId = "entryId_1"
         }
 
         // Initialize the ViewModel
