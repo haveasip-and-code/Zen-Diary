@@ -10,6 +10,7 @@ material = "1.12.0"
 constraintlayout = "2.1.4"
 lifecycleLivedataKtx = "2.8.3"
 lifecycleViewmodelKtx = "2.8.3"
+mpandroidchartVersion = "v3.1.0"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
 legacySupportV4 = "1.0.0"
@@ -20,6 +21,7 @@ retrofit = "2.9.0"
 colorpicker = "0.0.13"
 googleGmsGoogleServices = "4.4.2"
 firebaseDatabase = "21.0.0"
+mpandroidchart = "3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,9 +40,11 @@ androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+mpandroidchart-vv310 = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 colorpicker = { group = "com.github.QuadFlask", name = "colorpicker", version.ref = "colorpicker" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
