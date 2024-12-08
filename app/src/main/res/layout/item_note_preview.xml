@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:padding="6dp"
     android:background="@drawable/bg_item_note_preview"
-    android:elevation="10dp">
+    android:elevation="10dp"
+    android:layout_margin="10dp">
 
     <!-- Note image preview -->
     <ImageView
@@ -21,11 +22,24 @@
 
     <!-- Note preview text -->
     <TextView
+        android:id="@+id/note_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="12dp"
+        android:text="Header"
+        android:textSize="16sp"
+        android:textColor="@color/primary_home_text"
+        android:maxLines="3"
+        android:ellipsize="end"/>
+
+    <!-- Note preview text -->
+    <TextView
         android:id="@+id/note_preview_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginVertical="12dp"
+        android:layout_marginBottom="12dp"
         android:text="This is a preview of the note..."
         android:textSize="16sp"
         android:textColor="@color/primary_home_text"

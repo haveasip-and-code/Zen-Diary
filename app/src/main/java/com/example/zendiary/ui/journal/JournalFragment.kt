@@ -551,7 +551,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // List of items to display in the popup
         val items = listOf("Family", "Family", "Family", "Family", "Music", "Family")
 
-        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_16dp)
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_64dp)
         recyclerView.addItemDecoration(GridSpacingItemDecoration(2, spacingInPixels, true))
 
 // Adapter
