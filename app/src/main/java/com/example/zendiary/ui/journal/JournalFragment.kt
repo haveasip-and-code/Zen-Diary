@@ -71,7 +71,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private lateinit var ibShapePicker: ImageButton
     private lateinit var ibPenPicker: ImageButton
     private lateinit var ibEraser: ImageButton
-    private lateinit var note: Note
+
 
     private lateinit var ibAddImage: ImageButton
     private lateinit var imagePreviewContainer: LinearLayout
@@ -166,33 +166,40 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         savedInstanceState: Bundle?
     ): View? {
 
+        // Declare a nullable Note object
+        var note: Note? = null
 
-
-        // Retrieve the Note from the arguments
+        // Retrieve the Note from the arguments safely
         arguments?.let {
-            note = it.getParcelable("note")!!
+            note = it.getParcelable("note")
         }
 
-        // Use the Note object to populate UI
+        // Check if the Note object is not null before using it
+        if (note != null) {
+            entryId = note!!.entryId
+        } else {
+            Log.e("JournalFragment", "Note is missing from arguments!")
+            // Provide a fallback value or handle the error
+            entryId = "default_entry_id"
+        }
 
-        entryId = note.entryId  // Show the entry ID
-
-
-
-
+        // Initialize the ViewModel
         viewModel = ViewModelProvider(this)[JournalViewModel::class.java]
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_journal, container, false)
         editText = view.findViewById(R.id.et_content)
 
-        initToolbarPopup() // Khởi tạo popup toolbar
-        setupEditTextSelectionListener() // Lắng nghe sự kiện chọn văn bản
+        // Initialize the toolbar popup
+        initToolbarPopup()
 
-        // Initialize the layout and views
+        // Set up EditText selection listener
+        setupEditTextSelectionListener()
+
+        // Initialize views
         initViews(view)
 
-        // Observe the sentiment result from the ViewModel
+        // Observe sentiment results from the ViewModel
         observeSentimentResult()
 
         // Set up button click listeners
@@ -200,6 +207,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
         return view
     }
+
 
     // Function to initialize the views and layout
     private fun initViews(view: View) {
