@@ -14,6 +14,8 @@ import com.example.zendiary.databinding.FragmentHomeBinding
 import com.example.zendiary.ui.journal.JournalFragment
 import com.google.firebase.database.*
 import androidx.navigation.fragment.findNavController
+import com.example.zendiary.R
+
 
 class HomeFragment : Fragment() {
 
@@ -44,11 +46,12 @@ class HomeFragment : Fragment() {
                     putParcelable("note", note) // Ensure `note` implements Parcelable
                 }
             }
-//
-//            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.nav_host_fragment_activity_main, journalFragment)
-//                .addToBackStack(null) // Optional: to allow back navigation
-//                .commit()
+
+            // Use the container ID from your layout
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container, journalFragment) // Replace with your actual container ID
+                .addToBackStack(null)
+                .commit()
         }
         binding.recyclerViewNotes.adapter = adapter
 
