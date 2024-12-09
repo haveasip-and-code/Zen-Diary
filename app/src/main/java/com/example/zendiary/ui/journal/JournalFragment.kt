@@ -98,8 +98,12 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
         // Access the navigation drawer from the parent activity
         val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.drawer_layout)
+        if (drawerLayout != null) {
         view.findViewById<ImageButton>(R.id.ib_drawer_nav).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
+        }
+        } else {
+            Log.e("JournalFragment", "DrawerLayout is null")
         }
 
         // Kiểm tra xem popup đã hiển thị chưa từ SharedPreferences
