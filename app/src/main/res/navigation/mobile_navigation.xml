@@ -115,6 +115,9 @@
         android:name="com.example.zendiary.ui.journal.JournalFragment"
         android:label="fragment_journal"
         tools:layout="@layout/fragment_journal" >
+        <argument
+            android:name="note"
+            app:argType="com.example.zendiary.ui.home.Note" />
         <action
             android:id="@+id/action_journalFragment_to_deletionConfirmationFragment"
             app:destination="@id/deletionConfirmationFragment" />

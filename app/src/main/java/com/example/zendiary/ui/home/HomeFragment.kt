@@ -41,17 +41,10 @@ class HomeFragment : Fragment() {
 
         // Initialize RecyclerView Adapter
         adapter = NotesAdapter(notes) { note ->
-            val journalFragment = JournalFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("note", note) // Ensure `note` implements Parcelable
-                }
+            val bundle = Bundle().apply {
+                putParcelable("note", note) // Ensure `Note` implements Parcelable
             }
-
-            // Use the container ID from your layout
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, journalFragment) // Replace with your actual container ID
-                .addToBackStack(null)
-                .commit()
+            findNavController().navigate(R.id.journalFragment, bundle)
         }
         binding.recyclerViewNotes.adapter = adapter
 
