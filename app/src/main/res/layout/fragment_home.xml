@@ -114,9 +114,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_notes"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="-10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="60dp"
         android:clipToPadding="false"
         android:padding="8dp"
         android:scrollbars="vertical"

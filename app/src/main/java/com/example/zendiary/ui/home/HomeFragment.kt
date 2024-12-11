@@ -87,8 +87,11 @@ class HomeFragment : Fragment() {
                     // Get other details of the note
                     val header = entrySnapshot.child("header").getValue(String::class.java) ?: "Header"
                     val previewText = entrySnapshot.child("text").getValue(String::class.java) ?: "No text available"
-                    val date = entrySnapshot.child("date").getValue(String::class.java) ?: "Unknown Date"
+                    val dateTime = entrySnapshot.child("date").getValue(String::class.java) ?: "Unknown Date"
                     val imageUrl = entrySnapshot.child("imageUrl").getValue(String::class.java)
+
+                    // Extract only the date part (e.g., "2024-11-17") from the datetime string
+                    val date = dateTime.substringBefore("T") // Safely extracts the part before 'T'
 
                     // Add the fetched note to the list, now including the entryId
                     notes.add(Note(header, previewText, date, imageUrl, entryId))
