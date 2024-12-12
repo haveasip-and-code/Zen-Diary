@@ -1,4 +1,4 @@
-package com.example.zendiary.ui.home
+package com.example.zendiary.utils
 
 import android.os.Parcel
 import android.os.Parcelable

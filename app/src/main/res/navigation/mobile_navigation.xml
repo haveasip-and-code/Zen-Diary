@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_analytics">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -117,7 +117,7 @@
         tools:layout="@layout/fragment_journal" >
         <argument
             android:name="note"
-            app:argType="com.example.zendiary.ui.home.Note" />
+            app:argType="com.example.zendiary.utils.Note" />
         <action
             android:id="@+id/action_journalFragment_to_deletionConfirmationFragment"
             app:destination="@id/deletionConfirmationFragment" />

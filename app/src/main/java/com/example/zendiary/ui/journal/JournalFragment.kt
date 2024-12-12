@@ -47,8 +47,7 @@ import com.example.zendiary.backend.journal.ColorPickerDialog
 import com.example.zendiary.backend.journal.DrawingView
 import com.example.zendiary.backend.journal.ImagePickerBottomSheet
 import com.example.zendiary.backend.journal.PenToolBottomSheetDialog
-import com.example.zendiary.databinding.FragmentJournalBinding
-import com.example.zendiary.ui.home.Note
+import com.example.zendiary.utils.Note
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
