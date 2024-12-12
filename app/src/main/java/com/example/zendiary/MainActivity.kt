@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
             R.id.editProfileFragment,
             R.id.reminderTime,
             R.id.pincode,
-            R.id.deletionConfirmationFragment
+            R.id.deletionConfirmationFragment,
+            R.id.paymentFragment
         )
 
         // Passing each menu ID as a set of Ids because each
@@ -57,7 +58,11 @@ class MainActivity : AppCompatActivity() {
 
         // Set up click listener for the journal button
         binding.journalButton.setOnClickListener {
-            navController.navigate(R.id.journalFragment)
+            val userId = "userId_12345" // Replace with actual user ID
+            val bundle = Bundle().apply {
+                putString("userId", userId)
+            }
+            navController.navigate(R.id.journalFragment, bundle)
         }
 
         drawerLayout = findViewById(R.id.drawer_layout)

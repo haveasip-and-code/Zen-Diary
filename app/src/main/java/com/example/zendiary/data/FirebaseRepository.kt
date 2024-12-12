@@ -1,5 +1,6 @@
 package com.example.zendiary.data
 
+import android.util.Log
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -7,6 +8,24 @@ import java.util.Locale
 import java.util.TimeZone
 
 object FirebaseRepository {
+
+    fun getEntriesCountForUser(
+        userId: String,
+        callback: (Int) -> Unit) {
+        val database = FirebaseDatabase.getInstance()
+        val entriesRef = database.getReference("users/$userId/entries")
+
+        entriesRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val dataSnapshot = task.result
+                val count = dataSnapshot?.childrenCount?.toInt() ?: 0
+                callback(count)
+            } else {
+                Log.e("FirebaseRepository", "Error fetching entries count", task.exception)
+                callback(0) // Return 0 in case of error
+            }
+        }
+    }
 
     fun getSentimentFromFirebase(
         userId: String,

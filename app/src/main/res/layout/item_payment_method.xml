@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_round_dialog"
+    android:backgroundTint="@color/positive_color">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/ivImagePaymentMethod"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/avatar"
+            android:contentDescription="Payment Method Image"/>
+        <TextView
+            android:id="@+id/tvTitlePaymentMethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="50dp"
+            android:text="Payment Method"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlPaymentInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:background="@drawable/bg_round_dialog"
+        android:backgroundTint="@color/white"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/ivImagePaymentInfo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/avatar"
+            android:contentDescription="Payment Method Image"/>
+        <TextView
+            android:id="@+id/tvPaymentInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/ivImagePaymentInfo"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:text="Payment Information"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <ImageView
+            android:id="@+id/ivCheckMark"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_round_button"
+            android:backgroundTint="@color/negative_color"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlAddPayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:background="@drawable/bg_round_dialog"
+        android:backgroundTint="@color/white">
+        <ImageView
+            android:id="@+id/ivImageAddPaymentInfo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Payment Method Image"/>
+        <TextView
+            android:id="@+id/tvAddPaymentInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/ivImageAddPaymentInfo"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:text="Add New Payment Info"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

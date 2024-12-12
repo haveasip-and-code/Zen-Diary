@@ -85,22 +85,79 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private lateinit var popupWindow: PopupWindow
     private lateinit var editText: EditText
 
-    private var userId = "userId_12345"
-    private var entryId = "entryId_1"
+    private var userId: String? = null
+    private var entryId: String? = null
 
     private lateinit var journalText: String
 
     private var sentimentScore by Delegates.notNull<Float>()
     private lateinit var sentimentLabel: String
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Initialize the ViewModel
+        viewModel = ViewModelProvider(this)[JournalViewModel::class.java]
+
+        // Declare a nullable Note object
+        var note: Note? = null
+
+        // Retrieve the Note from the arguments safely
+        arguments?.let {
+            note = it.getParcelable("note")
+            userId = it.getString("userId")
+        }
+
+        // If it's a new entry, generate the entryId
+        if (note == null) {
+            if (userId?.isNotEmpty() == true) {
+                viewModel.generateNewEntryId(userId!!)
+            } else {
+                Log.e("JournalFragment", "UserId is missing! Cannot generate entryId.")
+            }
+        } else {
+            Log.d("JournalFragment", "Editing existing entry with ID: ${note!!.entryId}")
+            entryId = note!!.entryId
+        }
+
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_journal, container, false)
+        editText = view.findViewById(R.id.et_content)
+
+        // Initialize the toolbar popup
+        initToolbarPopup()
+
+        // Set up EditText selection listener
+        setupEditTextSelectionListener()
+
+        // Initialize views
+        initViews(view)
+
+        // Observe the entryId LiveData
+        viewModel.entryId.observe(viewLifecycleOwner) { newEntryId ->
+            // Use the newEntryId for your logic
+            entryId = newEntryId
+        }
+
+        // Observe sentiment results from the ViewModel
+        observeSentimentResult()
+
+        // Set up button click listeners
+        setupButtonListeners(view)
+
+        return view
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // Access the navigation drawer from the parent activity
         val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.drawer_layout)
         if (drawerLayout != null) {
-        view.findViewById<ImageButton>(R.id.ib_drawer_nav).setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
-        }
+            view.findViewById<ImageButton>(R.id.ib_drawer_nav).setOnClickListener {
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
         } else {
             Log.e("JournalFragment", "DrawerLayout is null")
         }
@@ -111,17 +168,21 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
             savePopupState(false)
         }
 
-        getTextFromFirebase(userId, entryId, object : FirebaseCallback {
-            override fun onSuccess(result: String?) {
-                // Xử lý khi dữ liệu được lấy thành công
-                editText.setText(result)
-            }
+        userId?.let {
+            entryId?.let { it1 ->
+                getTextFromFirebase(it, it1, object : FirebaseCallback {
+                    override fun onSuccess(result: String?) {
+                        // Xử lý khi dữ liệu được lấy thành công
+                        editText.setText(result)
+                    }
 
-            override fun onFailure(errorMessage: String?) {
-                // Xử lý khi có lỗi xảy ra
-                Log.e("FirebaseText", "Error: $errorMessage")
+                    override fun onFailure(errorMessage: String?) {
+                        // Xử lý khi có lỗi xảy ra
+                        Log.e("FirebaseText", "Error: $errorMessage")
+                    }
+                })
             }
-        })
+        }
 
     }
 
@@ -163,54 +224,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Nếu không tìm thấy giá trị lưu trữ, mặc định là true (popup sẽ được hiển thị lần đầu tiên)
         return sharedPreferences.getBoolean("popupIsShown", false)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        // Declare a nullable Note object
-        var note: Note? = null
-
-        // Retrieve the Note from the arguments safely
-        arguments?.let {
-            note = it.getParcelable("note")
-        }
-
-        // Check if the Note object is not null before using it
-        if (note != null) {
-            entryId = note!!.entryId
-        } else {
-            Log.e("JournalFragment", "Note is missing from arguments!")
-            // Provide a fallback value or handle the error
-            entryId = "entryId_1"
-        }
-
-        // Initialize the ViewModel
-        viewModel = ViewModelProvider(this)[JournalViewModel::class.java]
-
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_journal, container, false)
-        editText = view.findViewById(R.id.et_content)
-
-        // Initialize the toolbar popup
-        initToolbarPopup()
-
-        // Set up EditText selection listener
-        setupEditTextSelectionListener()
-
-        // Initialize views
-        initViews(view)
-
-        // Observe sentiment results from the ViewModel
-        observeSentimentResult()
-
-        // Set up button click listeners
-        setupButtonListeners(view)
-
-        return view
-    }
-
 
     // Function to initialize the views and layout
     private fun initViews(view: View) {
@@ -417,24 +430,28 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     }
 
     private fun saveJournalEntry() {
-        saveEntryToFirebase(
-            userId = "12345",
-            entryId = "1",
-            text = journalText,
-            sentimentScore = sentimentScore,
-            sentimentLabel = sentimentLabel,
-            object : FirebaseCallback {
-                override fun onSuccess(result: String?) {
-                    if (result != null) {
-                        Log.d("Firebase", result)
-                    }
-                }
+        userId?.let {
+            entryId?.let { it1 ->
+                saveEntryToFirebase(
+                    userId = it,
+                    entryId = it1,
+                    text = journalText,
+                    sentimentScore = sentimentScore,
+                    sentimentLabel = sentimentLabel,
+                    object : FirebaseCallback {
+                        override fun onSuccess(result: String?) {
+                            if (result != null) {
+                                Log.d("Firebase", result)
+                            }
+                        }
 
-                override fun onFailure(errorMessage: String?) {
-                    Log.e("Firebase", errorMessage ?: "Error occurred")
-                }
+                        override fun onFailure(errorMessage: String?) {
+                            Log.e("Firebase", errorMessage ?: "Error occurred")
+                        }
+                    }
+                )
             }
-        )
+        }
         showToast("Journal entry saved!")
     }
 
