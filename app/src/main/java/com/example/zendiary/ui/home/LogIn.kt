@@ -134,10 +134,10 @@ class LogIn : AppCompatActivity() {
                     var isValidUser = false
 
                     for (userSnapshot in snapshot.children) {
-                        val dbEmail = userSnapshot.child("profile").child("email").value.toString()
+                        val dbEmail = userSnapshot.child("profile").child("email").value.toString().lowercase()
                         val dbPassword = userSnapshot.child("profile").child("passwordHash").value.toString()
 
-                        if (dbEmail == email && dbPassword == password) {
+                        if (dbEmail == email.lowercase() && dbPassword == password) {
                             isValidUser = true
                             val foundUserId = userSnapshot.key // Lấy giá trị userId
                             if (foundUserId != null) {
