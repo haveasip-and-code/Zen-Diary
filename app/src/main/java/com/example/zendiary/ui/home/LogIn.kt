@@ -20,7 +20,7 @@ class LogIn : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
-        val signInButton = findViewById<ImageButton>(R.id.imageButton)
+        val signInButton = findViewById<ImageButton>(R.id.signinButton)
         signInButton.setOnClickListener {
             setContentView(R.layout.sign_in)
 
@@ -57,7 +57,7 @@ class LogIn : AppCompatActivity() {
 
 
         // "Sign up" button listener to switch to sign_up.xml layout
-        val signUpButton = findViewById<ImageButton>(R.id.imageButton2)
+        val signUpButton = findViewById<ImageButton>(R.id.signupButton)
         signUpButton.setOnClickListener {
             setContentView(R.layout.sign_up)
 
@@ -116,7 +116,7 @@ class LogIn : AppCompatActivity() {
             if (task.isSuccessful) {
                 Toast.makeText(this, "User registered successfully!", Toast.LENGTH_SHORT).show()
                 // Optionally navigate back to the login page or another screen
-                setContentView(R.layout.activity_log_in)
+                recreate()
             } else {
                 Toast.makeText(this, "Failed to register user: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
