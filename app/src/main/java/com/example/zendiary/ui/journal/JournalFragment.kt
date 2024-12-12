@@ -54,7 +54,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlin.properties.Delegates
-
+import com.example.zendiary.Global
 
 class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelectedListener {
 
@@ -85,7 +85,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private lateinit var popupWindow: PopupWindow
     private lateinit var editText: EditText
 
-    private var userId: String? = null
+    private var userId: String? = Global.userId
     private var entryId: String? = null
 
     private lateinit var journalText: String
@@ -106,7 +106,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Retrieve the Note from the arguments safely
         arguments?.let {
             note = it.getParcelable("note")
-            userId = it.getString("userId")
+            userId = Global.userId
         }
 
         // If it's a new entry, generate the entryId

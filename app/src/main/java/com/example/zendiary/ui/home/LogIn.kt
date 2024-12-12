@@ -9,9 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.zendiary.R
 import com.google.firebase.database.FirebaseDatabase
 import android.content.Intent
+import android.util.Log
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.zendiary.MainActivity
+import com.example.zendiary.Global
 
 class LogIn : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,12 @@ class LogIn : AppCompatActivity() {
                 } else {
                     checkUserInDatabase(email, password) { isValid ->
                         if (isValid) {
+                            if (Global.userId != null) {
+                                Log.d("Login", "Đăng nhập thành công! User ID: ${Global.userId}")
+                            } else {
+                                Log.d("Login", "Đăng nhập thành công, nhưng không lấy được User ID.")
+                            }
+
                             // Chuyển sang MainActivity nếu thông tin đúng
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
@@ -115,35 +123,35 @@ class LogIn : AppCompatActivity() {
         }
     }
 
-    private fun checkUserInDatabase(email: String, password: String, callback: (Boolean) -> Unit) {
+    fun checkUserInDatabase(email: String, password: String, callback: (Boolean) -> Unit) {
         val database = FirebaseDatabase.getInstance()
         val usersRef = database.getReference("users")
 
-        // Lấy dữ liệu từ Firebase
         usersRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val snapshot = task.result
                 if (snapshot.exists()) {
                     var isValidUser = false
 
-                    // Duyệt qua tất cả người dùng trong database
                     for (userSnapshot in snapshot.children) {
                         val dbEmail = userSnapshot.child("profile").child("email").value.toString()
                         val dbPassword = userSnapshot.child("profile").child("passwordHash").value.toString()
 
                         if (dbEmail == email && dbPassword == password) {
                             isValidUser = true
+                            val foundUserId = userSnapshot.key // Lấy giá trị userId
+                            if (foundUserId != null) {
+                                Global.userId = foundUserId // Update Global.userId nếu userId hợp lệ
+                            }
                             break
                         }
                     }
 
-                    // Gọi callback với kết quả
-                    callback(isValidUser)
+                    callback(isValidUser) // Trả về kết quả
                 } else {
                     callback(false)
                 }
             } else {
-                // Lỗi khi truy cập Firebase
                 callback(false)
             }
         }

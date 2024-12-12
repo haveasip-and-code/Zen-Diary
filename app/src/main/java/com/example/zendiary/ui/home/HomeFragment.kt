@@ -12,6 +12,7 @@ import com.google.firebase.database.*
 import androidx.navigation.fragment.findNavController
 import com.example.zendiary.R
 import com.example.zendiary.utils.Note
+import com.example.zendiary.Global
 
 
 class HomeFragment : Fragment() {
@@ -22,6 +23,7 @@ class HomeFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private val notes = mutableListOf<Note>()
     private lateinit var adapter: NotesAdapter
+    private var userId: String? = Global.userId
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +40,7 @@ class HomeFragment : Fragment() {
 
         // Initialize RecyclerView Adapter
         adapter = NotesAdapter(notes) { note ->
-            val userId = "userId_12345" // Replace with actual user ID
+            val userId = Global.userId // Replace with actual user ID
             val bundle = Bundle().apply {
                 putParcelable("note", note) // Ensure `Note` implements Parcelable
                 putString("userId", userId)
@@ -69,12 +71,12 @@ class HomeFragment : Fragment() {
 //        })
 
         // Load data from Firebase
-        loadNotesFromFirebase("userId_12345") // Replace "userId" with the actual user ID
+        loadNotesFromFirebase(userId) // Replace "userId" with the actual user ID
 
         return root
     }
 
-    private fun loadNotesFromFirebase(userId: String) {
+    private fun loadNotesFromFirebase(userId: String?) {
         val entriesRef = database.getReference("users/$userId/entries")
         entriesRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
