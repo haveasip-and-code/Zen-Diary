@@ -1,20 +1,17 @@
 package com.example.zendiary.ui.home
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.databinding.FragmentHomeBinding
-import com.example.zendiary.ui.journal.JournalFragment
 import com.google.firebase.database.*
 import androidx.navigation.fragment.findNavController
 import com.example.zendiary.R
+import com.example.zendiary.utils.Note
 
 
 class HomeFragment : Fragment() {

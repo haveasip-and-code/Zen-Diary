@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.R
+import com.example.zendiary.utils.Note
 
 class NotesAdapter(
     private val notes: List<Note>,

@@ -1,5 +1,6 @@
 package com.example.zendiary.ui.analytics
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,12 @@ import com.example.zendiary.R
 import com.example.zendiary.databinding.FragmentAnalyticsBinding
 import com.example.zendiary.ui.analytics.adapters.RecommendationsAdapter
 import com.example.zendiary.ui.analytics.adapters.WeekDaysAdapter
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 
@@ -25,6 +31,8 @@ class AnalyticsFragment : Fragment() {
 
     private lateinit var weekDaysAdapter: WeekDaysAdapter
     private lateinit var recommendationsAdapter: RecommendationsAdapter
+
+    private lateinit var lineChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,9 +57,39 @@ class AnalyticsFragment : Fragment() {
         observeViewModel()
     }
 
+    private fun setupChart(moodScores: List<Float>) {
+        // Initialize the LineChart
+        lineChart = binding.lineChartMoodFlow
+
+        // Convert the moodScores list to chart entries
+        val entries = moodScores.mapIndexed { index, score -> Entry(index.toFloat(), score) }
+
+        // Create the dataset
+        val dataSet = LineDataSet(entries, "Mood Flow")
+        dataSet.color = Color.BLUE
+        dataSet.valueTextColor = Color.BLACK
+        dataSet.lineWidth = 2f
+        dataSet.setCircleColor(Color.RED) // Circle color
+        dataSet.circleRadius = 4f
+        dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER // Smooth curved line
+
+        // Bind data to the chart
+        val lineData = LineData(dataSet)
+        lineChart.data = lineData
+
+        // Customize the chart
+        lineChart.axisLeft.axisMinimum = -2f // Minimum Y-axis value
+        lineChart.axisLeft.axisMaximum = 2f // Maximum Y-axis value
+        lineChart.axisRight.isEnabled = false // Disable the right Y-axis
+        lineChart.xAxis.granularity = 1f // Only whole numbers for X-axis
+        lineChart.description.isEnabled = false // Disable description
+        lineChart.invalidate() // Refresh the chart
+    }
+
     private fun setupWeekDaysRecyclerView() {
         weekDaysAdapter = WeekDaysAdapter { selectedDay ->
             viewModel.updateSelectedDay(selectedDay) // Notify ViewModel when a day is selected
+            viewModel.loadRecommendationsForDay(selectedDay.split(" ")[0])
         }
         binding.rvWeekDays.apply {
             adapter = weekDaysAdapter
@@ -110,9 +148,12 @@ class AnalyticsFragment : Fragment() {
         binding.ibCalendar.setOnClickListener {
             if (binding.ibCalendar.isEnabled) {
 
-                // Create a date range picker
+                // Get the current date in milliseconds
+                val currentDateMillis = System.currentTimeMillis()
+
+                // Create a calendar constraint to allow only dates before today
                 val constraintsBuilder = CalendarConstraints.Builder()
-                    .setValidator(DateValidatorPointForward.now()) // Disallow past dates
+                    .setValidator(DateValidatorPointBackward.before(currentDateMillis)) // Disallow future dates
 
                 val datePicker = MaterialDatePicker.Builder.dateRangePicker()
                     .setTitleText("Select Date Range")
@@ -160,9 +201,14 @@ class AnalyticsFragment : Fragment() {
             binding.btnWeek.isSelected = !isDayMode
         }
 
+        // Observe the mood flow data
+        viewModel.moodFlowData.observe(viewLifecycleOwner) { moodScores ->
+            setupChart(moodScores)
+        }
+
         viewModel.dateRange.observe(viewLifecycleOwner) { range ->
             val (start, end) = range
-            // Format and display the date range, or perform analytics filtering
+            viewModel.loadMoodFlowDataFromFirebase("userId_12345", start, end)
         }
     }
 
