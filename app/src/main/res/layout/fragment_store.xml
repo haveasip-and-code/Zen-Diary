@@ -27,8 +27,10 @@
             app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintVertical_bias="0.065"
             app:srcCompat="@drawable/arrow_back"
-            android:layout_margin="10dp"
-            android:layout_marginStart="20dp"/>
+
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            />
 
 
         <TextView
@@ -43,7 +45,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.026" />
+            app:layout_constraintVertical_bias="0.026"
+            android:layout_marginTop="20dp" />
 
 
         <ImageButton
@@ -123,6 +126,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- RecyclerView Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_notes"
         android:layout_width="match_parent"
@@ -132,9 +136,9 @@
         android:clipToPadding="false"
         android:padding="8dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_weight="1"
+    />
+
 
 
 </LinearLayout>

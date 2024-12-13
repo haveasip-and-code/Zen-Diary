@@ -11,7 +11,10 @@ import com.example.zendiary.ui.profile.StoreItem
 import com.squareup.picasso.Picasso
 import java.lang.String
 
-class StoreAdapter(storeItems: List<StoreItem>) :
+
+class StoreAdapter(storeItems: List<StoreItem>,
+                   private val onClick: (StoreItem) -> Unit // Add this
+) :
     RecyclerView.Adapter<StoreAdapter.StoreViewHolder>() {
     private val storeItems: List<StoreItem> = storeItems
 
@@ -23,11 +26,15 @@ class StoreAdapter(storeItems: List<StoreItem>) :
 
     override fun onBindViewHolder(holder: StoreViewHolder, position: Int) {
         val item: StoreItem = storeItems[position]
+
+        holder.itemView.setOnClickListener { onClick(item) } // Call click listener
+
         holder.nameTextView.setText(item.getName())
-        holder.priceTextView.text = String.format("$%.2f", item.getPrice())
+        holder.priceTextView.text = String.format("%.2f", item.getPrice())
 
         // Load image using Picasso or Glide
         Picasso.get().load(item.getImageUrl()).into(holder.imageView)
+
     }
 
     override fun getItemCount(): Int {

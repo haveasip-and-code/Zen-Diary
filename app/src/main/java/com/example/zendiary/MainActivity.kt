@@ -37,7 +37,8 @@ class MainActivity : AppCompatActivity() {
             R.id.reminderTime,
             R.id.pincode,
             R.id.deletionConfirmationFragment,
-            R.id.paymentFragment
+            R.id.paymentFragment,
+            R.id.storeFragment
         )
 
         // Passing each menu ID as a set of Ids because each
