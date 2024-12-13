@@ -91,11 +91,24 @@ class StoreFragment : Fragment() {
                     val name = itemSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
                     val imageUrl = itemSnapshot.child("image").getValue(String::class.java) ?: ""
 
-                    // Retrieve price as Double, directly from Firebase
-                    val price = itemSnapshot.child("price").getValue(Double::class.java) ?: 0.99  // Fallback to 0.99 if null
+                    // Check for both Double and String types for price
+                    val price = itemSnapshot.child("price").let { priceSnapshot ->
+                        when {
+                            // If price is a number (Double)
+                            priceSnapshot.value is Double -> priceSnapshot.getValue(Double::class.java)
+                            // If price is stored as a string, try converting it to Double
+                            priceSnapshot.value is String -> (priceSnapshot.getValue(String::class.java)
+                                ?.toDoubleOrNull() ?: 0.99)
+                            // Fallback to a default value if no price is found
+                            else -> 0.99
+                        }
+                    }
+
+                    // Log the values to verify they are being retrieved
+                    Log.d("StoreFragment", "Item: $name, Price: $price, Image URL: $imageUrl")
 
                     // Create a new StoreItem object
-                    val item = StoreItem(name, price, imageUrl)
+                    val item = StoreItem(name, price ?: 0.99, imageUrl)
 
                     storeItems!!.add(item) // Add the item to the list
                 }
@@ -107,6 +120,7 @@ class StoreFragment : Fragment() {
             }
         })
     }
+
 
 
 
