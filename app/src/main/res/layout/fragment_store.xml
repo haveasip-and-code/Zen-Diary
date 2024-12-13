@@ -13,24 +13,128 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_top_toolbar_journal">
+        android:background= "#FEFEFE">
 
-                <ImageButton
-                    android:id="@+id/backButtonProfileEdit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="0.1"
-                    app:layout_constraintVertical_bias="0.065"
-                    app:srcCompat="@drawable/arrow_back" />
+        <ImageButton
+            android:id="@+id/backButtonProfileEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintVertical_bias="0.065"
+            app:srcCompat="@drawable/arrow_back"
+            android:layout_margin="10dp"
+            android:layout_marginStart="20dp"/>
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/josefin_sans_bold"
+            android:text="Store"
+            android:textColorLink="#4D5036"
+            android:textSize="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.026" />
+
+
+        <ImageButton
+            android:id="@+id/buyFlower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            app:layout_constraintVertical_bias="0.065"
+            app:srcCompat="@drawable/flower_add"
+            android:layout_margin="10dp"
+            android:layout_marginStart="20dp"/>
+
+
+        <TextView
+            android:id="@+id/coinFlower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/josefin_sans_bold"
+            android:text="500"
+            android:textColorLink="#4D5036"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/buyFlower"
+            app:layout_constraintStart_toEndOf="@+id/buyFlower"
+            app:layout_constraintTop_toTopOf="@+id/buyFlower"
+
+            />
 
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+    <TextView
+        android:id="@+id/Stickers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/josefin_sans_bold"
+        android:text="Stickers"
+        android:textColorLink="#4D5036"
+        android:textSize="20dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/white_cornered_bg"
+        android:layout_margin="20dp"
+        android:padding="5dp"
+        />
+
+    <TextView
+        android:id="@+id/Pages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/josefin_sans_bold"
+        android:text="Pages"
+        android:textColorLink="#4D5036"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@id/Stickers"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/white_cornered_bg"
+        android:layout_margin="20dp"
+        android:padding="5dp"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_notes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </LinearLayout>

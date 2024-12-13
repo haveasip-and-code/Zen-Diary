@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/storeFragment">
+
+    <fragment
+        android:id="@+id/storeFragment"
+        android:name="com.example.zendiary.ui.profile.StoreFragment"
+        android:label="Store"
+        tools:layout="@layout/fragment_store" />
 
     <fragment
         android:id="@+id/navigation_home"

@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zendiary.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
+import com.example.zendiary.ui.profile.StoreFragment
 
 class MainActivity : AppCompatActivity() {
 
