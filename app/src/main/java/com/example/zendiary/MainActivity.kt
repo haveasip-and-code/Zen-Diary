@@ -58,11 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set up click listener for the journal button
         binding.journalButton.setOnClickListener {
-            val userId = "userId_12345" // Replace with actual user ID
-            val bundle = Bundle().apply {
-                putString("userId", userId)
-            }
-            navController.navigate(R.id.journalFragment, bundle)
+            navController.navigate(R.id.journalFragment)
         }
 
         drawerLayout = findViewById(R.id.drawer_layout)

@@ -1,5 +1,5 @@
 package com.example.zendiary
 
 object Global {
-    var userId: String? = null
+    var userId: String? = "userId_12345"
 }

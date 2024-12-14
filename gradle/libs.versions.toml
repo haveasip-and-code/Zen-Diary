@@ -22,6 +22,7 @@ colorpicker = "0.0.13"
 googleGmsGoogleServices = "4.4.2"
 firebaseDatabase = "21.0.0"
 mpandroidchart = "3.1.0"
+firebaseStorageKtx = "21.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 colorpicker = { group = "com.github.QuadFlask", name = "colorpicker", version.ref = "colorpicker" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

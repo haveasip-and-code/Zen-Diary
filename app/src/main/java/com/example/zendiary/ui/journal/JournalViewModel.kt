@@ -25,14 +25,14 @@ class JournalViewModel : ViewModel() {
             try {
                 val response = RetrofitInstance.api.analyzeSentiment(mapOf("text" to journalText))
                 if (response.isSuccessful) {
-                    _sentimentResult.postValue(response.body())
+                    _sentimentResult.setValue(response.body())
                 } else {
                     // Handle error
-                    _sentimentResult.postValue(null)
+                    _sentimentResult.setValue(null)
                 }
             } catch (e: Exception) {
                 // Handle failure
-                _sentimentResult.postValue(null)
+                _sentimentResult.setValue(null)
             }
         }
     }
