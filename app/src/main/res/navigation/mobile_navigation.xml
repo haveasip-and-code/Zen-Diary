@@ -3,13 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/storeFragment">
+    app:startDestination="@+id/navigation_home">
 
     <fragment
         android:id="@+id/storeFragment"
         android:name="com.example.zendiary.ui.profile.StoreFragment"
         android:label="Store"
-        tools:layout="@layout/fragment_store" />
+        tools:layout="@layout/fragment_store" >
+        <action
+            android:id="@+id/action_storeFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment" >
+        <argument
+            android:name="packageName"
+            app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_storeFragment_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"
@@ -112,7 +123,9 @@
             android:id="@+id/action_profileFragment_to_pinCode"
             app:destination="@id/pincode" />
 
-
+        <action
+            android:id="@+id/action_navigation_profile_to_storeFragment"
+            app:destination="@id/storeFragment" />
     </fragment>
 
     <fragment
@@ -147,9 +160,20 @@
             android:id="@+id/action_deletionConfirmationFragment_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
+
+
     <fragment
         android:id="@+id/paymentFragment"
         android:name="com.example.zendiary.ui.payment.PaymentFragment"
         android:label="fragment_payment"
-        tools:layout="@layout/fragment_payment" />
+        tools:layout="@layout/fragment_payment">
+        <!-- Define argument -->
+        <argument
+            android:name="packageName"
+            app:argType="string" />
+        <!-- Add an action to navigate back to the StoreFragment -->
+        <action
+            android:id="@+id/action_paymentFragment_to_storeFragment"
+            app:destination="@id/storeFragment" />
+    </fragment>
 </navigation>

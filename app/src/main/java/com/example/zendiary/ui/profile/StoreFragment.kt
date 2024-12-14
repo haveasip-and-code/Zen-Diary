@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -20,8 +21,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.example.zendiary.Global
 
-class StoreFragment : Fragment() {
+class StoreFragment : Fragment()
+    //, CoinPackageDialogFragment.OnPackageSelectedListener
+{
     private lateinit var stickersButton: TextView
     private lateinit var pagesButton: TextView
     private lateinit var buyFlowerButton: ImageView
@@ -31,7 +35,7 @@ class StoreFragment : Fragment() {
     private var adapter: StoreAdapter? = null
     private var database: FirebaseDatabase? = null
     private var storeItems: MutableList<StoreItem>? = null
-    private var userId: String = "userId_12345" // Default user ID
+    private var userId: String? = Global.userId
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,20 +88,18 @@ class StoreFragment : Fragment() {
         buyFlowerButton = root.findViewById(R.id.buyFlower)
 
         buyFlowerButton.setOnClickListener {
-            val coinPackageDialog = CoinPackageDialogFragment.newInstance(userId)
+            val coinPackageDialog = CoinPackageDialogFragment.newInstance(userId!!)
             coinPackageDialog.show(parentFragmentManager, "CoinPackageDialog")
         }
 
-        // Inflate layout cho fragment
-        val rootView = inflater.inflate(R.layout.fragment_store, container, false)
 
-        // Lấy các view từ layout
-        val backButton: ImageButton = rootView.findViewById(R.id.backButtonProfileEdit)
 
-        // Thiết lập sự kiện cho nút "Back"
+
+        // Back button setup
+        val backButton: ImageButton = root.findViewById(R.id.backButtonProfileEdit)
         backButton.setOnClickListener {
-            // Sử dụng NavController để quay lại ProfileFragment
-            findNavController().navigateUp() // Điều này sẽ đưa bạn quay lại fragment trước đó
+            // Navigate back to the previous fragment
+            findNavController().navigateUp()
         }
 
 
@@ -260,6 +262,15 @@ class StoreFragment : Fragment() {
         }
     }
 
+
+//    override fun onPackageSelected(packageName: String) {
+//        val bundle = Bundle().apply {
+//            putString("selectedPackage", packageName)  // Pass the selected package name
+//        }
+//
+//        // Navigate to the PaymentFragment with the package name
+//        findNavController().navigate(R.id.action_storeFragment_to_paymentFragment, bundle)
+//    }
 
 
 

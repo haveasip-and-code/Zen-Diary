@@ -1,5 +1,6 @@
 package com.example.zendiary.ui.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
@@ -18,16 +20,34 @@ class CoinPackageDialogFragment : DialogFragment() {
     private var database: FirebaseDatabase? = null
     private var coinPackages: MutableList<CoinPackage> = mutableListOf()
     private var userId: String = ""
+//    private var callback: OnPackageSelectedListener? = null
+//    interface OnPackageSelectedListener {
+//        fun onPackageSelected(packageName: String)
+//    }
+//
+//
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        // Ensure the parent fragment implements the interface
+//        callback = parentFragment as? OnPackageSelectedListener
+//            ?: throw ClassCastException("$context must implement OnPackageSelectedListener")
+//    }
+
+
+
 
     companion object {
         fun newInstance(userId: String): CoinPackageDialogFragment {
-            val fragment = CoinPackageDialogFragment()
             val args = Bundle()
             args.putString("userId", userId)
+            val fragment = CoinPackageDialogFragment()
             fragment.arguments = args
             return fragment
         }
     }
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +63,10 @@ class CoinPackageDialogFragment : DialogFragment() {
         backButton.setOnClickListener {
             dismiss() // Dismiss the dialog when the back button is pressed
         }
+
+
+
+
 
         database = FirebaseDatabase.getInstance()
         userId = arguments?.getString("userId") ?: ""
@@ -78,8 +102,10 @@ class CoinPackageDialogFragment : DialogFragment() {
                     val coinPackage = CoinPackage(name, coins, price)
                     coinPackages.add(coinPackage)
                 }
-                recyclerView.adapter = CoinPackageAdapter(coinPackages) { coinPackage ->
-                    onCoinPackageClick(coinPackage)
+                recyclerView.adapter = CoinPackageAdapter(coinPackages) { packageName ->
+                    Log.d("CoinPackageDialog", "Selected package: $packageName")
+                    //callback?.onPackageSelected(packageName)  // This triggers the onPackageSelected method in StoreFragment
+                    dismiss() // Close the dialog after notifying
                 }
             }
 
@@ -88,20 +114,24 @@ class CoinPackageDialogFragment : DialogFragment() {
             }
         })
     }
-
-    private fun onCoinPackageClick(coinPackage: CoinPackage) {
-        val balanceRef = database!!.getReference("users/$userId/balance")
-        balanceRef.get().addOnSuccessListener { balanceSnapshot ->
-            val currentBalance = balanceSnapshot.getValue(Int::class.java) ?: 0
-            val updatedBalance = currentBalance + coinPackage.coins
-            balanceRef.setValue(updatedBalance).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("CoinPackageDialog", "Successfully added ${coinPackage.coins} coins.")
-                    dismiss() // Close dialog after purchase
-                } else {
-                    Log.e("CoinPackageDialog", "Failed to update balance.")
-                }
-            }
-        }
-    }
 }
+//    private fun onPackageClick(packageName: String) {
+//        val selectedPackage = coinPackages.find { it.name == packageName }
+//        if (selectedPackage != null) {
+//            val balanceRef = database!!.getReference("users/$userId/balance")
+//            balanceRef.get().addOnSuccessListener { balanceSnapshot ->
+//                val currentBalance = balanceSnapshot.getValue(Int::class.java) ?: 0
+//                val updatedBalance = currentBalance + selectedPackage.coins
+//                balanceRef.setValue(updatedBalance).addOnCompleteListener { task ->
+//                    if (task.isSuccessful) {
+//                        Log.d("CoinPackageDialog", "Successfully added ${selectedPackage.coins} coins.")
+//                        dismiss() // Close dialog after purchase
+//                    } else {
+//                        Log.e("CoinPackageDialog", "Failed to update balance.")
+//                    }
+//                }
+//            }
+//        } else {
+//            Log.e("CoinPackageDialog", "Selected package not found.")
+//        }
+//    }
