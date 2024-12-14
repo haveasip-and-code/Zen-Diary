@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener
 import com.example.zendiary.Global
 
 class StoreFragment : Fragment()
-    //, CoinPackageDialogFragment.OnPackageSelectedListener
+    , CoinPackageDialogFragment.OnPackageSelectedListener
 {
     private lateinit var stickersButton: TextView
     private lateinit var pagesButton: TextView
@@ -89,7 +89,7 @@ class StoreFragment : Fragment()
 
         buyFlowerButton.setOnClickListener {
             val coinPackageDialog = CoinPackageDialogFragment.newInstance(userId!!)
-            coinPackageDialog.show(parentFragmentManager, "CoinPackageDialog")
+            coinPackageDialog.show(childFragmentManager, "CoinPackageDialog")
         }
 
 
@@ -108,6 +108,16 @@ class StoreFragment : Fragment()
         loadUserBalance()
 
         return root
+    }
+
+
+    override fun onPackageSelected(packageName: String) {
+        val bundle = Bundle().apply {
+            putString("selectedPackage", packageName)  // Pass the selected package name
+        }
+
+        // Navigate to the PaymentFragment with the package name
+        findNavController().navigate(R.id.action_storeFragment_to_paymentFragment, bundle)
     }
 
     private fun loadStoreItems(category: String) {
@@ -263,14 +273,7 @@ class StoreFragment : Fragment()
     }
 
 
-//    override fun onPackageSelected(packageName: String) {
-//        val bundle = Bundle().apply {
-//            putString("selectedPackage", packageName)  // Pass the selected package name
-//        }
-//
-//        // Navigate to the PaymentFragment with the package name
-//        findNavController().navigate(R.id.action_storeFragment_to_paymentFragment, bundle)
-//    }
+
 
 
 

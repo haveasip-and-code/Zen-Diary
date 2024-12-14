@@ -20,18 +20,18 @@ class CoinPackageDialogFragment : DialogFragment() {
     private var database: FirebaseDatabase? = null
     private var coinPackages: MutableList<CoinPackage> = mutableListOf()
     private var userId: String = ""
-//    private var callback: OnPackageSelectedListener? = null
-//    interface OnPackageSelectedListener {
-//        fun onPackageSelected(packageName: String)
-//    }
-//
-//
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        // Ensure the parent fragment implements the interface
-//        callback = parentFragment as? OnPackageSelectedListener
-//            ?: throw ClassCastException("$context must implement OnPackageSelectedListener")
-//    }
+    private var callback: OnPackageSelectedListener? = null
+    interface OnPackageSelectedListener {
+        fun onPackageSelected(packageName: String)
+    }
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Ensure the parent fragment implements the interface
+        callback = parentFragment as? OnPackageSelectedListener
+            ?: throw ClassCastException("$context must implement OnPackageSelectedListener")
+    }
 
 
 
@@ -104,7 +104,7 @@ class CoinPackageDialogFragment : DialogFragment() {
                 }
                 recyclerView.adapter = CoinPackageAdapter(coinPackages) { packageName ->
                     Log.d("CoinPackageDialog", "Selected package: $packageName")
-                    //callback?.onPackageSelected(packageName)  // This triggers the onPackageSelected method in StoreFragment
+                    callback?.onPackageSelected(packageName)  // This triggers the onPackageSelected method in StoreFragment
                     dismiss() // Close the dialog after notifying
                 }
             }
