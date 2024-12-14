@@ -26,7 +26,7 @@ class HomeFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private val notes = mutableListOf<Note>()
     private lateinit var adapter: NotesAdapter
-    private var userId: String? = Global.userId
+    private var userId = Global.userId
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,10 +46,8 @@ class HomeFragment : Fragment() {
 
         // Initialize RecyclerView Adapter
         adapter = NotesAdapter(notes) { note ->
-            val userId = Global.userId // Replace with actual user ID
             val bundle = Bundle().apply {
                 putParcelable("note", note) // Ensure `Note` implements Parcelable
-                putString("userId", userId)
             }
             findNavController().navigate(R.id.journalFragment, bundle)
         }
@@ -77,7 +75,7 @@ class HomeFragment : Fragment() {
                     val entryId = entrySnapshot.key ?: "Unknown ID"
 
                     // Get other details of the note
-                    val header = entrySnapshot.child("header").getValue(String::class.java) ?: "Header"
+                    val header = entrySnapshot.child("headerEntry").getValue(String::class.java) ?: "Header"
                     val previewText = entrySnapshot.child("text").getValue(String::class.java) ?: "No text available"
                     val dateTime = entrySnapshot.child("date").getValue(String::class.java) ?: "Unknown Date"
                     val imageUrl = entrySnapshot.child("imageUrl").getValue(String::class.java)

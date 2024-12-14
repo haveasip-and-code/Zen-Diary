@@ -27,36 +27,6 @@ object FirebaseRepository {
         }
     }
 
-    fun getSentimentFromFirebase(
-        userId: String,
-        entryId: String,
-        callback: (String?, Float?) -> Unit)
-    {
-        val database = FirebaseDatabase.getInstance()
-        val sentimentRef = database.getReference("users/$userId/entries/$entryId/sentiment")
-
-        sentimentRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val dataSnapshot = task.result
-                val label = dataSnapshot.child("label").getValue(String::class.java)
-                val score = dataSnapshot.child("score").getValue(Float::class.java)
-                callback(label, score)
-            } else {
-                // Handle failure
-                callback(null, null)
-            }
-        }
-    }
-
-    fun convertIsoToDate(isoDate: String): String {
-        val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-        val date = isoFormat.parse(isoDate)
-
-        // Convert to yyyy-MM-dd format
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return simpleDateFormat.format(date ?: Date())
-    }
-
     fun getEntriesInDateRange(
         userId: String,
         startDateMillis: Long,
@@ -71,20 +41,34 @@ object FirebaseRepository {
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
         val startDateIso = dateFormat.format(Date(startDateMillis))
-        val endDateIso = dateFormat.format(Date(endDateMillis))
+        val endDateIso = dateFormat.format(Date(endDateMillis+ (24 * 60 * 60 * 1000)))
 
-        entriesRef.orderByChild("date").startAt(startDateIso).endAt(endDateIso).get()
+        entriesRef
+            .get()
             .addOnSuccessListener { snapshot ->
-                val entries = mutableListOf<Pair<String, Float>>()
+                // Use a mutable list of Triple to include date, label, and score
+                val entries = mutableListOf<Triple<String, String, Float>>()
+
                 for (child in snapshot.children) {
+                    val date = child.child("date").value as? String
                     val sentiment = child.child("sentiment")
                     val label = sentiment.child("label").value as? String
-                    val score = sentiment.child("score").value as? Double
-                    if (label != null && score != null) {
-                        entries.add(label to score.toFloat())
+                    val score = (sentiment.child("score").value as? Number)?.toDouble()
+
+                    // Include date in the entry if all values are valid
+                    if (label != null && score != null && date != null && date >= startDateIso && date <= endDateIso) {
+                        entries.add(Triple(date, label, score.toFloat()))
                     }
                 }
-                callback(entries)
+
+                // Sort entries by date (ISO 8601 format allows lexicographical sorting)
+                val sortedEntries = entries.sortedBy { it.first }
+
+                // If you need only label and score, map it back to a list of Pair
+                val result = sortedEntries.map { it.second to it.third }
+
+                // Pass the sorted result to the callback
+                callback(result)
             }
             .addOnFailureListener {
                 callback(emptyList()) // Handle failure gracefully
