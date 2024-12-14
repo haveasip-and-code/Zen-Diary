@@ -5,12 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.zendiary.backend.analysis.RetrofitInstance
-import com.example.zendiary.backend.analysis.SentimentResponse
 import com.example.zendiary.data.FirebaseRepository
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class JournalViewModel : ViewModel() {
     private val _sentimentResult = MutableLiveData<Map<String, Float>?>()

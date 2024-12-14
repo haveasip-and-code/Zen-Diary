@@ -27,36 +27,6 @@ object FirebaseRepository {
         }
     }
 
-    fun getSentimentFromFirebase(
-        userId: String,
-        entryId: String,
-        callback: (String?, Float?) -> Unit)
-    {
-        val database = FirebaseDatabase.getInstance()
-        val sentimentRef = database.getReference("users/$userId/entries/$entryId/sentiment")
-
-        sentimentRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val dataSnapshot = task.result
-                val label = dataSnapshot.child("label").getValue(String::class.java)
-                val score = dataSnapshot.child("score").getValue(Float::class.java)
-                callback(label, score)
-            } else {
-                // Handle failure
-                callback(null, null)
-            }
-        }
-    }
-
-    fun convertIsoToDate(isoDate: String): String {
-        val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-        val date = isoFormat.parse(isoDate)
-
-        // Convert to yyyy-MM-dd format
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return simpleDateFormat.format(date ?: Date())
-    }
-
     fun getEntriesInDateRange(
         userId: String,
         startDateMillis: Long,

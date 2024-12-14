@@ -43,9 +43,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 mpandroidchart-vv310 = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-colorpicker = { group = "com.github.QuadFlask", name = "colorpicker", version.ref = "colorpicker" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
-mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 [plugins]
