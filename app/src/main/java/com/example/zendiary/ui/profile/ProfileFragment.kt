@@ -88,6 +88,14 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_reminder)
         }
 
+        // Bind and set up the Store button
+        val storeButton: LinearLayout = binding.storeButton
+        storeButton.setOnClickListener {
+            // Navigate to StoreFragment
+            findNavController().navigate(R.id.action_navigation_profile_to_storeFragment)
+        }
+
+
         // Sử dụng ViewBinding thay vì findViewById cho logout_button
         val logoutButton = binding.logoutButton
         logoutButton.setOnClickListener {

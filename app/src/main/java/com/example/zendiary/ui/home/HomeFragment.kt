@@ -13,6 +13,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.zendiary.R
 import com.example.zendiary.utils.Note
 import com.example.zendiary.Global
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class HomeFragment : Fragment() {
@@ -38,6 +41,9 @@ class HomeFragment : Fragment() {
         // Initialize Firebase Database reference
         database = FirebaseDatabase.getInstance()
 
+
+
+
         // Initialize RecyclerView Adapter
         adapter = NotesAdapter(notes) { note ->
             val bundle = Bundle().apply {
@@ -47,29 +53,14 @@ class HomeFragment : Fragment() {
         }
         binding.recyclerViewNotes.adapter = adapter
 
-
         // Set GridLayoutManager with 2 columns
         binding.recyclerViewNotes.layoutManager = GridLayoutManager(requireContext(), 2)
 
-
-//        // Add padding at the bottom of the RecyclerView (optional)
-//        binding.recyclerViewNotes.addItemDecoration(object : RecyclerView.ItemDecoration() {
-//            override fun getItemOffsets(
-//                outRect: Rect,
-//                view: View,
-//                parent: RecyclerView,
-//                state: RecyclerView.State
-//            ) {
-//                val position = parent.getChildAdapterPosition(view)
-//                val itemCount = state.itemCount
-//                if (position == itemCount - 1) {
-//                    outRect.bottom = resources.getDimensionPixelSize(R.dimen.recycler_view_bottom_padding)
-//                }
-//            }
-//        })
-
         // Load data from Firebase
-        loadNotesFromFirebase(userId) // Replace "userId" with the actual user ID
+        loadNotesFromFirebase(userId)
+
+        // Set User Name and Date
+        loadUserDataAndDate(userId)
 
         return root
     }
@@ -104,15 +95,27 @@ class HomeFragment : Fragment() {
         })
     }
 
+    private fun loadUserDataAndDate(userId: String?) {
+        val userRef = database.getReference("users/$userId/profile")
+
+        // Fetch user's name from Firebase
+        userRef.child("fullname").get().addOnSuccessListener { snapshot ->
+            val userName = snapshot.getValue(String::class.java) ?: "User"
+
+            // Split the name into parts and take the last part as the last name
+            val lastName = userName.split(" ").last() // Take the last part of the name
+
+
+            binding.nameofUser.text = "Hi, $lastName"  // Updated ID here
+        }
+
+        // Get current date and format it as DD/MM/YYYY
+        val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        binding.textDate.text = currentDate
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
-
-
 }
-
-
