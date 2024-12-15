@@ -1,21 +1,50 @@
 package com.example.zendiary.ui.home
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.Button
+import android.util.Log
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.zendiary.Global
+import com.example.zendiary.MainActivity
 import com.example.zendiary.R
 import com.google.firebase.database.FirebaseDatabase
-import android.content.Intent
-import android.util.Log
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.zendiary.MainActivity
-import com.example.zendiary.Global
+
 
 class LogIn : AppCompatActivity() {
+    var sharedPreferences: SharedPreferences? = null
+    var editor: SharedPreferences.Editor? = null
+
+    private fun saveLoginInfo(email: String, password: String, rememberMe: Boolean) {
+        sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE)
+        editor = sharedPreferences?.edit()
+
+        if (rememberMe) {
+            editor?.putString("email", email)
+            editor?.putString("password", password)
+            editor?.putBoolean("rememberMe", true)
+        } else {
+            editor?.clear() // Xóa thông tin nếu không chọn Remember Me
+        }
+        editor?.apply()
+    }
+
+    private fun getSavedLoginInfo(): Pair<String, String>? {
+        sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE)
+        val rememberMe = sharedPreferences?.getBoolean("rememberMe", false) ?: false
+        return if (rememberMe) {
+            val email = sharedPreferences?.getString("email", "") ?: ""
+            val password = sharedPreferences?.getString("password", "") ?: ""
+            Pair(email, password)
+        } else {
+            null
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
@@ -27,27 +56,34 @@ class LogIn : AppCompatActivity() {
             val emailField = findViewById<EditText>(R.id.editTextEmailsigin) // EditText nhập email
             val passwordField = findViewById<EditText>(R.id.editTextPasswordsigni) // EditText nhập mật khẩu
             val homeButton = findViewById<ImageButton>(R.id.toHome)
+            val rememberMeCheckBox = findViewById<CheckBox>(R.id.rememberMe)
 
+            // Tự động điền nếu Remember Me đã được chọn trước đó
+            getSavedLoginInfo()?.let { (savedEmail, savedPassword) ->
+                emailField.setText(savedEmail)
+                passwordField.setText(savedPassword)
+                rememberMeCheckBox.isChecked = true
+            }
+
+            // Xử lý sự kiện nhấn nút Đăng nhập
             homeButton.setOnClickListener {
                 val email = emailField.text.toString().trim()
                 val password = passwordField.text.toString().trim()
+                val rememberMe = rememberMeCheckBox.isChecked
 
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(this, "Email và mật khẩu không được để trống", Toast.LENGTH_SHORT).show()
                 } else {
                     checkUserInDatabase(email, password) { isValid ->
                         if (isValid) {
-                            if (Global.userId != null) {
-                                Log.d("Login", "Đăng nhập thành công! User ID: ${Global.userId}")
-                            } else {
-                                Log.d("Login", "Đăng nhập thành công, nhưng không lấy được User ID.")
-                            }
+                            // Lưu thông tin nếu Remember Me được bật
+                            saveLoginInfo(email, password, rememberMe)
 
-                            // Chuyển sang MainActivity nếu thông tin đúng
+                            // Chuyển sang MainActivity
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
+                            finish() // Kết thúc màn hình đăng nhập
                         } else {
-                            // Hiển thị lỗi nếu thông tin không đúng
                             Toast.makeText(this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show()
                         }
                     }

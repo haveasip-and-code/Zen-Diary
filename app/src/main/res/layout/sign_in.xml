@@ -142,7 +142,7 @@
         app:srcCompat="@drawable/login_button" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/rememberMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="184dp"
