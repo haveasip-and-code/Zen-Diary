@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zendiary.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
+import com.example.zendiary.ui.profile.StoreFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +37,8 @@ class MainActivity : AppCompatActivity() {
             R.id.reminderTime,
             R.id.pincode,
             R.id.deletionConfirmationFragment,
-            R.id.paymentFragment
+            R.id.paymentFragment,
+            R.id.storeFragment
         )
 
         // Passing each menu ID as a set of Ids because each
@@ -58,11 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set up click listener for the journal button
         binding.journalButton.setOnClickListener {
-            val userId = "userId_12345" // Replace with actual user ID
-            val bundle = Bundle().apply {
-                putString("userId", userId)
-            }
-            navController.navigate(R.id.journalFragment, bundle)
+            navController.navigate(R.id.journalFragment)
         }
 
         drawerLayout = findViewById(R.id.drawer_layout)

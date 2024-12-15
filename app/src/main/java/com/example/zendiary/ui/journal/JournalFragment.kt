@@ -10,6 +10,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -48,13 +49,17 @@ import com.example.zendiary.backend.journal.DrawingView
 import com.example.zendiary.backend.journal.ImagePickerBottomSheet
 import com.example.zendiary.backend.journal.PenToolBottomSheetDialog
 import com.example.zendiary.utils.Note
-import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlin.properties.Delegates
 import com.example.zendiary.Global
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelectedListener {
 
@@ -83,11 +88,13 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     private var selectedImageUri: Uri? = null
 
     private lateinit var popupWindow: PopupWindow
+    private lateinit var editHeaderText: EditText
     private lateinit var editText: EditText
 
-    private var userId: String? = Global.userId
+    private var userId = Global.userId
     private var entryId: String? = null
 
+    private lateinit var headerEntry: String
     private lateinit var journalText: String
 
     private var sentimentScore by Delegates.notNull<Float>()
@@ -106,7 +113,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Retrieve the Note from the arguments safely
         arguments?.let {
             note = it.getParcelable("note")
-            userId = Global.userId
         }
 
         // If it's a new entry, generate the entryId
@@ -123,6 +129,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_journal, container, false)
+        editHeaderText = view.findViewById(R.id.et_title)
         editText = view.findViewById(R.id.et_content)
 
         // Initialize the toolbar popup
@@ -134,6 +141,9 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         // Initialize views
         initViews(view)
 
+        // Set up button click listeners
+        setupButtonListeners(view)
+
         // Observe the entryId LiveData
         viewModel.entryId.observe(viewLifecycleOwner) { newEntryId ->
             // Use the newEntryId for your logic
@@ -142,9 +152,6 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
         // Observe sentiment results from the ViewModel
         observeSentimentResult()
-
-        // Set up button click listeners
-        setupButtonListeners(view)
 
         return view
     }
@@ -170,44 +177,31 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
         userId?.let {
             entryId?.let { it1 ->
-                getTextFromFirebase(it, it1, object : FirebaseCallback {
+                getTextFromFirebase(it, it1, object : FirebaseCallback<Pair<String?, String?>> {
                     override fun onSuccess(result: String?) {
-                        // Xử lý khi dữ liệu được lấy thành công
-                        editText.setText(result)
+                        // Parsing the Pair back from the String (if needed)
+                        val pair = result
+                            ?.removePrefix("Pair(") // Remove the "Pair(" prefix
+                            ?.removeSuffix(")")    // Remove the ")" suffix
+                            ?.split(", ")          // Split by ", "
+
+                        // Extract text and headerEntry
+                        val text = pair?.getOrNull(0) // First value
+                        val headerEntry = pair?.getOrNull(1) // Second value
+                        // Set the values in the EditTexts
+                        editText.setText(text ?: "") // Set the extracted text or an empty string if null
+                        editHeaderText.setText(headerEntry ?: "") // Set the extracted header or an empty string if null
+                        Log.d("Firebase", "Text: $text, HeaderEntry: $headerEntry")
                     }
 
                     override fun onFailure(errorMessage: String?) {
-                        // Xử lý khi có lỗi xảy ra
-                        Log.e("FirebaseText", "Error: $errorMessage")
+                        Log.e("Firebase", "Error: $errorMessage")
                     }
                 })
+
             }
         }
-
     }
-
-    private fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallback) {
-        // Tham chiếu đến Firebase Database
-        val database = FirebaseDatabase.getInstance()
-        val textRef = database.getReference("users/$userId/entries/$entryId/text")
-
-        // Đọc dữ liệu từ Firebase
-        textRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    val text = dataSnapshot.getValue(String::class.java) // Lấy giá trị dạng String
-                    callback.onSuccess(text) // Gọi callback khi đọc dữ liệu thành công
-                } else {
-                    callback.onFailure("Text not found!")
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                callback.onFailure(databaseError.message)
-            }
-        })
-    }
-
 
     // Lưu giá trị của biến popupIsShown vào SharedPreferences
     fun savePopupState(isPopupShown: Boolean) {
@@ -300,27 +294,37 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         }
 
         view.findViewById<Button>(R.id.btn_save).setOnClickListener {
+            headerEntry = editHeaderText.text.toString()
             journalText = editText.text.toString()
 
             if (journalText.isNotEmpty()) {
+                // Trigger sentiment analysis
                 viewModel.analyzeSentiment(journalText)
-                Toast.makeText(requireContext(), "Sentiment analysis completed", Toast.LENGTH_SHORT).show()
+
+                // Observe sentiment result
+                viewModel.sentimentResult.observe(viewLifecycleOwner) { result ->
+                    if (result != null) {
+                        val sentimentScore = result["compound"] ?: 0f
+                        showSentimentDialog(sentimentScore)
+
+                        val sentimentLabel = when {
+                            sentimentScore > 0.1 -> "positive"
+                            sentimentScore < -0.1 -> "negative"
+                            else -> "neutral"
+                        }
+
+                        Toast.makeText(requireContext(), "Sentiment analysis completed: $sentimentLabel", Toast.LENGTH_SHORT).show()
+
+                        // Perform any additional actions with sentimentScore or sentimentLabel
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to analyze sentiment", Toast.LENGTH_SHORT).show()
+                    }
+                }
             } else {
                 Toast.makeText(requireContext(), "Please enter text to analyze", Toast.LENGTH_SHORT).show()
             }
-
-            sentimentScore = viewModel.sentimentResult.value?.get("compound") ?: 0f
-
-            showSentimentDialog(sentimentScore)
-
-            sentimentLabel = when {
-                sentimentScore > 0.1 -> "positive"
-                sentimentScore < -0.1 -> "negative"
-                else -> "neutral"
-            }
-
-
         }
+
 
     }
 
@@ -435,10 +439,12 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
                 saveEntryToFirebase(
                     userId = it,
                     entryId = it1,
+                    headerEntry = headerEntry,
                     text = journalText,
                     sentimentScore = sentimentScore,
                     sentimentLabel = sentimentLabel,
-                    object : FirebaseCallback {
+                    imageView = ivImagePreview,
+                    object : FirebaseCallback<Any?> {
                         override fun onSuccess(result: String?) {
                             if (result != null) {
                                 Log.d("Firebase", result)
@@ -802,19 +808,25 @@ class GridSpacingItemDecoration(
     }
 }
 
-fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallback) {
-    // Tham chiếu đến Firebase Database
+fun getTextFromFirebase(
+    userId: String,
+    entryId: String,
+    callback: FirebaseCallback<Pair<String?, String?>> // Returning both text and headerEntry as a Pair
+) {
+    // Reference to Firebase Database
     val database = FirebaseDatabase.getInstance()
-    val textRef = database.getReference("users/$userId/entries/$entryId/text")
+    val entryRef = database.getReference("users/$userId/entries/$entryId")
 
-    // Đọc dữ liệu từ Firebase
-    textRef.addListenerForSingleValueEvent(object : ValueEventListener {
+    // Read data from Firebase
+    entryRef.addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             if (dataSnapshot.exists()) {
-                val text = dataSnapshot.getValue(String::class.java) // Lấy giá trị dạng String
-                callback.onSuccess(text) // Gọi callback khi đọc dữ liệu thành công
+                // Retrieve both `text` and `headerEntry`
+                val text = dataSnapshot.child("text").getValue(String::class.java)
+                val headerEntry = dataSnapshot.child("headerEntry").getValue(String::class.java)
+                callback.onSuccess(Pair(text, headerEntry).toString()) // Return both values as a Pair
             } else {
-                callback.onFailure("Text not found!")
+                callback.onFailure("Entry not found!")
             }
         }
 
@@ -827,35 +839,83 @@ fun getTextFromFirebase(userId: String, entryId: String, callback: FirebaseCallb
 fun saveEntryToFirebase(
     userId: String,
     entryId: String,
+    headerEntry: String?,
     text: String?,
     sentimentScore: Float,
     sentimentLabel: String,
-    callback: FirebaseCallback
+    imageView: ImageView?, // Nullable ImageView
+    callback: FirebaseCallback<Any?>
 ) {
     val database = FirebaseDatabase.getInstance()
     val entryRef = database.getReference("users/$userId/entries/$entryId")
 
-    // Create a map to hold the data
-    val entryData = mapOf(
-        "text" to text,
-        "sentiment" to mapOf(
-            "label" to sentimentLabel,
-            "score" to sentimentScore
-        )
-    )
+    // Get the current timestamp and format it
+    val currentDateTime = System.currentTimeMillis()
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    dateFormat.timeZone = TimeZone.getTimeZone("UTC") // Set time zone to UTC
+    val formattedDate = dateFormat.format(currentDateTime)
 
-    // Save the data to Firebase
-    entryRef.setValue(entryData).addOnCompleteListener { task: Task<Void?> ->
-        if (task.isSuccessful) {
-            callback.onSuccess("Entry saved successfully.")
-        } else {
-            callback.onFailure(task.exception?.message ?: "Unknown error")
+    // Helper function to save data in Firebase
+    fun saveDataToFirebase(imageUrl: String? = null) {
+        // Create a map to hold the data
+        val entryData = mapOf(
+            "headerEntry" to headerEntry,
+            "text" to text,
+            "sentiment" to mapOf(
+                "label" to sentimentLabel,
+                "score" to sentimentScore
+            ),
+            "date" to formattedDate, // Save date as timestamp
+            "image" to imageUrl // Save the image URL if available
+        )
+
+        // Save the entry data to Firebase Database
+        entryRef.setValue(entryData).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                callback.onSuccess("Entry saved successfully.")
+            } else {
+                callback.onFailure(task.exception?.message ?: "Unknown error")
+            }
         }
+    }
+
+    // Check if the image is present
+    if (imageView != null && imageView.drawable != null) {
+        // Get Firebase Storage instance
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageRef = storageRef.child("users/$userId/entries/$entryId/image.jpg")
+
+        // Prepare image for upload
+        imageView.isDrawingCacheEnabled = true
+        imageView.buildDrawingCache()
+        val bitmap = (imageView.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        // Start the image upload
+        imageRef.putBytes(data).addOnCompleteListener { uploadTask ->
+            if (uploadTask.isSuccessful) {
+                // Get the image download URL
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    saveDataToFirebase(uri.toString()) // Save data with the image URL
+                }.addOnFailureListener {
+                    callback.onFailure("Failed to get image URL: ${it.message}")
+                }
+            } else {
+                callback.onFailure("Image upload failed: ${uploadTask.exception?.message ?: "Unknown error"}")
+            }
+        }
+    } else {
+        // If no image is present, save data without an image URL
+        saveDataToFirebase()
     }
 }
 
 
-interface FirebaseCallback {
+
+
+interface FirebaseCallback<T> {
     fun onSuccess(result: String?) // Hàm được gọi khi dữ liệu được lấy thành công
     fun onFailure(errorMessage: String?) // Hàm được gọi khi có lỗi xảy ra
 }
