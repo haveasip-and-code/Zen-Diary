@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zendiary.R
-import com.example.zendiary.data.FirebaseRepository
+import com.example.zendiary.data.FirebaseRepository.fetchSentimentsForDate
 import com.example.zendiary.data.FirebaseRepository.getEntriesInDateRange
 import com.example.zendiary.ui.analytics.models.Recommendation
 import java.text.SimpleDateFormat
@@ -18,12 +18,12 @@ class AnalyticsViewModel : ViewModel() {
     val recommendations: LiveData<List<Recommendation>> get() = _recommendations
 
     // LiveData for selected day/week toggle state
-    private val _isDayViewSelected = MutableLiveData<Boolean>(true) // Default to "Day"
+    private val _isDayViewSelected = MutableLiveData(true) // Default to "Day"
     val isDayViewSelected: LiveData<Boolean> get() = _isDayViewSelected
 
     // LiveData for selected day (for day/week toggle logic)
     private val _selectedDay = MutableLiveData<String>()
-    val selectedDay: LiveData<String> get() = _selectedDay
+    private val selectedDay: LiveData<String> get() = _selectedDay
 
     // LiveData for the current mood flow and mood bar data
     private val _moodFlowData = MutableLiveData<List<Float>>() // Example mood flow data
@@ -35,18 +35,55 @@ class AnalyticsViewModel : ViewModel() {
     private val _dateRange = MutableLiveData<Pair<Long, Long>>()
     val dateRange: LiveData<Pair<Long, Long>> get() = _dateRange
 
+    private val _weeklyDishes = MutableLiveData<List<Pair<String, List<Recommendation>?>>>()
+    val weeklyDishes: MutableLiveData<List<Pair<String, List<Recommendation>?>>> get() = _weeklyDishes
+
     init {
         // Load initial data
-//        loadRecommendationsForDay("M")
         loadMoodFlowData()
         initializeWeekDays()
+        loadRecommendationsForDay(selectedDay.value ?: "M")
     }
+
+    private val sentimentDishes = mapOf(
+        "positive" to listOf(
+            Recommendation("Positive", "Grilled Salmon", "Perfect for dinner", R.drawable.avatar),
+            Recommendation("Positive", "Pumpkin Chicken Curry", "Recommended for lunch time", R.drawable.avatar)
+        ),
+        "neutral" to listOf(
+            Recommendation("Neutral", "Caesar Salad", "Great for a healthy meal", R.drawable.avatar),
+            Recommendation("Neutral", "Vegetarian Stir Fry", "Perfect for a light lunch", R.drawable.avatar)
+        ),
+        "negative" to listOf(
+            Recommendation("Negative", "Mushroom Risotto", "Avoid heavy meals during this time", R.drawable.avatar),
+            Recommendation("Negative", "Fried Chicken", "Not recommended for late night", R.drawable.avatar)
+        )
+    )
+
 
     private fun initializeWeekDays() {
         val calendar = Calendar.getInstance()
-
         // Set the first day of the week to Monday (if not already set)
         calendar.firstDayOfWeek = Calendar.MONDAY
+
+        // Set to the start of the week (Monday)
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfWeek = calendar.timeInMillis
+
+        // Set to the end of the week (Sunday at 23:59:59)
+        calendar.add(Calendar.DAY_OF_WEEK, 6)
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+        val endOfWeek = calendar.timeInMillis
+
+        // Update LiveData with the date range
+        _dateRange.value = startOfWeek to endOfWeek
 
         // Get the current day of the week
         val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // Sunday = 1, Monday = 2, ..., Saturday = 7
@@ -75,6 +112,13 @@ class AnalyticsViewModel : ViewModel() {
 
         // Format for displaying day of the month
         val dayOfMonthFormat = SimpleDateFormat("d", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+
+        // List to hold the week menu
+        val weeklyDishes = mutableListOf<Pair<String, List<Recommendation>?>>()
+
+        // Fetch sentiment and initialize menu for each day
+        val dayAbbreviations = listOf("M", "T", "W", "T", "F", "Sa", "Su")
 
         // Add the days of the week starting from Monday
         for (i in 0 until 7) {
@@ -95,6 +139,36 @@ class AnalyticsViewModel : ViewModel() {
             // Add to the week days list
             weekDays.add("$weekday $dayOfMonth")
 
+            // Get the date in ISO format for database queries
+            val currentDateIso = dateFormat.format(calendar.time)
+
+            // Fetch sentiments for the current date
+            fetchSentimentsForDate(currentDateIso) { sentimentLabels ->
+                // Use a set to avoid duplicate dishes
+                val dishesSet = mutableSetOf<Recommendation>()
+
+                // If sentiments are found for the date
+                if (sentimentLabels.isNotEmpty()) {
+                    sentimentLabels.forEach { sentiment ->
+                        sentimentDishes[sentiment]?.let { dishes ->
+                            dishesSet.addAll(dishes) // Add dishes while avoiding duplicates
+                        }
+                    }
+                }
+
+                // Convert the set back to a list
+                val dishes = dishesSet.toList()
+
+                // Add the day's abbreviation and its corresponding dishes to weeklyDishes
+                weeklyDishes.add(dayAbbreviations[i] to dishes)
+
+                // If this is the last day of the week, update the LiveData
+                if (weeklyDishes.size == dayAbbreviations.size) {
+                    _weeklyDishes.value = weeklyDishes // Replace _weeklyDishes with your LiveData or variable
+                }
+            }
+
+
             // Move to the next day
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
@@ -103,41 +177,10 @@ class AnalyticsViewModel : ViewModel() {
         _weekDays.value = weekDays
     }
 
-    // Data structure to hold dishes for each day
-    private val weeklyDishes = mapOf(
-        "M" to listOf(
-            Recommendation("Positive", "Pumpkin Chicken Curry", "Recommended for lunch time", R.drawable.avatar),
-            Recommendation("Neutral", "Grilled Chicken Salad", "Perfect for a light meal", R.drawable.avatar)
-        ),
-        "T" to listOf(
-            Recommendation("Negative", "Mushroom Risotto", "Avoid heavy meals during this time", R.drawable.avatar),
-            Recommendation("Positive", "Spaghetti Bolognese", "Good for evening meals", R.drawable.avatar)
-        ),
-        "W" to listOf(
-            Recommendation("Positive", "Vegetarian Tacos", "Great for a quick lunch", R.drawable.avatar),
-            Recommendation("Neutral", "Caesar Salad", "Great for a healthy meal", R.drawable.avatar)
-        ),
-        "T" to listOf(
-            Recommendation("Negative", "Fried Chicken", "Not recommended for late night", R.drawable.avatar),
-            Recommendation("Positive", "Grilled Salmon", "Perfect for dinner", R.drawable.avatar)
-        ),
-        "F" to listOf(
-            Recommendation("Neutral", "Spaghetti Carbonara", "Best enjoyed with a glass of wine", R.drawable.avatar),
-            Recommendation("Positive", "Salmon Sushi", "A healthy choice", R.drawable.avatar)
-        ),
-        "Su" to listOf(
-            Recommendation("Neutral", "Vegetable Stir Fry", "Great for a weekend lunch", R.drawable.avatar),
-            Recommendation("Positive", "Chicken Wrap", "Light and delicious", R.drawable.avatar)
-        ),
-        "Sa" to listOf(
-            Recommendation("Negative", "Beef Stew", "Heavy meal, avoid before bedtime", R.drawable.avatar),
-            Recommendation("Positive", "Quinoa Salad", "Light and healthy", R.drawable.avatar)
-        )
-    )
 
     fun loadRecommendationsForDay(day: String) {
         // Fetch the list of dishes for the selected day
-        val dishesForDay = weeklyDishes[day] ?: emptyList()
+        val dishesForDay = _weeklyDishes.value?.firstOrNull { it.first == day }?.second ?: emptyList()
 
         // Update LiveData or state to trigger UI update
         _recommendations.value = dishesForDay
@@ -168,5 +211,8 @@ class AnalyticsViewModel : ViewModel() {
         }
     }
 
-
+    // Method to reset to default state
+    fun resetDayView() {
+        _isDayViewSelected.value = true
+    }
 }

@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.zendiary.Global.userId
 import com.example.zendiary.R
 import com.example.zendiary.databinding.FragmentAnalyticsBinding
 import com.example.zendiary.ui.analytics.adapters.RecommendationsAdapter
@@ -21,6 +22,10 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class AnalyticsFragment : Fragment() {
 
@@ -165,7 +170,15 @@ class AnalyticsFragment : Fragment() {
                 // Listen to the selected date range
                 datePicker.addOnPositiveButtonClickListener { dateRange ->
                     val startDate = dateRange.first // Start date in milliseconds
-                    val endDate = dateRange.second // End date in milliseconds
+
+                    // Adjust endDate to the end of the selected day (23:59:59.999)
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = dateRange.second
+                    calendar.set(Calendar.HOUR_OF_DAY, 23)
+                    calendar.set(Calendar.MINUTE, 59)
+                    calendar.set(Calendar.SECOND, 59)
+                    calendar.set(Calendar.MILLISECOND, 999)
+                    val endDate = calendar.timeInMillis
 
                     // Perform actions based on the selected date range
                     viewModel.setDateRange(startDate, endDate)
@@ -189,9 +202,10 @@ class AnalyticsFragment : Fragment() {
         viewModel.isDayViewSelected.observe(viewLifecycleOwner) { isDayMode ->
             binding.rvWeekDays.visibility = if (isDayMode) View.VISIBLE else View.GONE
             binding.rvRecommendations.visibility = if (isDayMode) View.VISIBLE else View.GONE
+            binding.tvRecommendations.visibility = if (isDayMode) View.GONE else View.GONE
             binding.tvSelectedWeek.visibility = if (!isDayMode) View.VISIBLE else View.GONE
-            binding.btnNextWeek.visibility = if (!isDayMode) View.VISIBLE else View.GONE
-            binding.btnPreviousWeek.visibility = if (!isDayMode) View.VISIBLE else View.GONE
+            binding.btnNextWeek.visibility = if (!isDayMode) View.GONE else View.GONE
+            binding.btnPreviousWeek.visibility = if (!isDayMode) View.GONE else View.GONE
             binding.tvmoodflowtitle.visibility = if (!isDayMode) View.VISIBLE else View.GONE
             binding.lineChartMoodFlow.visibility = if (!isDayMode) View.VISIBLE else View.GONE
             binding.tvmoodbartitle.visibility = if (!isDayMode) View.VISIBLE else View.GONE
@@ -201,19 +215,38 @@ class AnalyticsFragment : Fragment() {
             binding.btnWeek.isSelected = !isDayMode
         }
 
+        // Observe date range LiveData
+        viewModel.dateRange.observe(viewLifecycleOwner) { range ->
+            val (start, end) = range
+            range?.let {
+                val formattedRange = formatDateRange(it.first, it.second)
+                binding.tvSelectedWeek.text = formattedRange
+            }
+            userId?.let { viewModel.loadMoodFlowDataFromFirebase(it, start, end) }
+        }
+
         // Observe the mood flow data
         viewModel.moodFlowData.observe(viewLifecycleOwner) { moodScores ->
             setupChart(moodScores)
         }
+    }
 
-        viewModel.dateRange.observe(viewLifecycleOwner) { range ->
-            val (start, end) = range
-            viewModel.loadMoodFlowDataFromFirebase("userId_12345", start, end)
-        }
+    // Helper function to format date range
+    private fun formatDateRange(startMillis: Long, endMillis: Long): String {
+        val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+        val startDate = dateFormat.format(Date(startMillis))
+        val endDate = dateFormat.format(Date(endMillis))
+        return "$startDate - $endDate"
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reset the toggle state to "Day" when the fragment becomes visible
+        viewModel.resetDayView()
     }
 }

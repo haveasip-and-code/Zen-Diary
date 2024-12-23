@@ -304,10 +304,10 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
                 // Observe sentiment result
                 viewModel.sentimentResult.observe(viewLifecycleOwner) { result ->
                     if (result != null) {
-                        val sentimentScore = result["compound"] ?: 0f
+                        sentimentScore = result["compound"] ?: 0f
                         showSentimentDialog(sentimentScore)
 
-                        val sentimentLabel = when {
+                        sentimentLabel = when {
                             sentimentScore > 0.1 -> "positive"
                             sentimentScore < -0.1 -> "negative"
                             else -> "neutral"
