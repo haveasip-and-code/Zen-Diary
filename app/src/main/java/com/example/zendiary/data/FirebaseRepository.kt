@@ -6,8 +6,45 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import com.example.zendiary.Global.userId
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
 object FirebaseRepository {
+
+    fun fetchSentimentsForDate(dateIso: String, callback: (List<String>) -> Unit) {
+        val database = FirebaseDatabase.getInstance()
+        val sentimentRef = database.getReference("users/$userId/entries") // Adjust path as needed
+
+        sentimentRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // Extract just the date part (yyyy-MM-dd) from the input date
+                val targetDate = dateIso.substring(0, 10)
+                val sentiments = mutableListOf<String>() // List to collect sentiment labels
+
+                for (child in snapshot.children) {
+                    // Get the entry date
+                    val entryDate = (child.child("date").value as? String)?.substring(0, 10)
+                    if (entryDate == targetDate) {
+                        // Add the sentiment label if it exists
+                        val sentimentLabel = child.child("sentiment").child("label").value as? String
+                        if (sentimentLabel != null) {
+                            sentiments.add(sentimentLabel)
+                        }
+                    }
+                }
+                // Pass all collected sentiment labels to the callback
+                callback(sentiments)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(emptyList()) // Handle errors by returning an empty list
+            }
+        })
+    }
+
+
 
     fun getEntriesCountForUser(
         userId: String,
@@ -41,7 +78,7 @@ object FirebaseRepository {
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
         val startDateIso = dateFormat.format(Date(startDateMillis))
-        val endDateIso = dateFormat.format(Date(endDateMillis+ (24 * 60 * 60 * 1000)))
+        val endDateIso = dateFormat.format(Date(endDateMillis))
 
         entriesRef
             .get()
