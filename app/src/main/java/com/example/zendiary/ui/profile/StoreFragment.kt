@@ -99,7 +99,7 @@ class StoreFragment : Fragment()
         val backButton: ImageButton = root.findViewById(R.id.backButtonProfileEdit)
         backButton.setOnClickListener {
             // Navigate back to the previous fragment
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.action_storeFragment_to_navigation_profile)
         }
 
 

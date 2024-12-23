@@ -42,9 +42,15 @@ class PaymentMethodsAdapter(
         }
     }
 
+    fun updateData(newPaymentMethods: List<PaymentMethod>) {
+        paymentMethods.clear()
+        paymentMethods.addAll(newPaymentMethods)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentMethodViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_payment_method, parent, false) // Use your layout file name
+            .inflate(R.layout.item_payment_method, parent, false)
         return PaymentMethodViewHolder(view)
     }
 

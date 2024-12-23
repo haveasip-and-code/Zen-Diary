@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Do you want to buy it with:"
+        android:textSize="18sp"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvSelectedPaymentMethod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Selected Payment Method"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnConfirmPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:paddingHorizontal="10dp"
+        android:text="Yeahhhh"
+        android:textColor="#F7F0E2"
+        android:textAllCaps="false"
+        android:background="@drawable/bg_round_button"
+        android:backgroundTint="#ABB27A" />
+
+</LinearLayout>
