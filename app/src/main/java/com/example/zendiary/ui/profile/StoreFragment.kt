@@ -51,7 +51,7 @@ class StoreFragment : Fragment()
         coinFlowerTextView = root.findViewById(R.id.coinFlower)
 
         // Retrieve user ID from arguments or set default
-        userId = arguments?.getString("userId") ?: "userId_12345"
+        userId = Global.userId
 
         // Initialize RecyclerView
         recyclerView = root.findViewById(R.id.recycler_view_notes)
