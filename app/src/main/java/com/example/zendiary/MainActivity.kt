@@ -67,12 +67,16 @@ class MainActivity : AppCompatActivity() {
 
         val navViewDrawer: NavigationView = findViewById(R.id.nav_view_drawer)
         navViewDrawer.setNavigationItemSelectedListener { menuItem ->
-//            when (menuItem.itemId) {
-//
-//            }
+            when (menuItem.itemId) {
+                R.id.naviga -> { // Ensure this ID matches the one in your navigation drawer menu XML
+                    findNavController(navController).navigate(R.id.action_global_ownedStickersFragment)
+                }
+                // Add other cases here for additional navigation items
+            }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
 
         // Add a listener to show/hide BottomNavigationView based on the destination
         navController.addOnDestinationChangedListener { _, destination, _ ->

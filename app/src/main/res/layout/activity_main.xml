@@ -79,13 +79,14 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp">
+                android:layout_marginVertical="10dp"
+                android:id="@+id/ThemesNStickers">
                 <ImageButton
                     android:id="@+id/ib_theme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
-                    android:contentDescription="Theme"
+                    android:contentDescription="Themes and Stickers"
                     android:src="@drawable/ic_theme"
                     android:paddingEnd="130dp"
                     />
@@ -100,29 +101,29 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp">
-                <ImageButton
-                    android:id="@+id/ib_sticker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    android:contentDescription="Sticker"
-                    android:src="@drawable/ic_sticker"
-                    android:paddingEnd="130dp"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="35dp"
-                    android:paddingVertical="1dp"
-                    android:text="Sticker"
-                    android:textSize="16sp"
-                    />
+<!--            <RelativeLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginVertical="10dp">-->
+<!--                <ImageButton-->
+<!--                    android:id="@+id/ib_sticker"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@color/transparent"-->
+<!--                    android:contentDescription="Sticker"-->
+<!--                    android:src="@drawable/ic_sticker"-->
+<!--                    android:paddingEnd="130dp"-->
+<!--                    />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="35dp"-->
+<!--                    android:paddingVertical="1dp"-->
+<!--                    android:text="Stickersss"-->
+<!--                    android:textSize="16sp"-->
+<!--                    />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
             <ImageView
                 android:layout_width="180dp"

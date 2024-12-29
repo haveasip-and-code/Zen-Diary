@@ -23,6 +23,20 @@
     </fragment>
 
     <fragment
+        android:id="@+id/ownedStickersFragment"
+        android:name="com.example.zendiary.ui.profile.OwnedStickesFragment"
+        android:label="OwnedStickers"
+        tools:layout="@layout/fragment_store" >
+        <action
+            android:id="@+id/action_storeOwnedStickers_to_journalFragment"
+            app:destination="@id/journalFragment" >
+
+        </action>
+
+    </fragment>
+
+
+    <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.zendiary.ui.home.HomeFragment"
         android:label="@string/title_home"
@@ -145,6 +159,10 @@
         <action
             android:id="@+id/action_journalFragment_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_journalFragment_to_OwnedStickersFragment"
+            app:destination="@id/ownedStickersFragment" />
+
     </fragment>
 
     <fragment
