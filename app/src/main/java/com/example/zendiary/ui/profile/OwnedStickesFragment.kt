@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.example.zendiary.Global
-class OwnedStickesFragment : Fragment()
+class OwnedStickersFragment : Fragment()
 
 {
     private lateinit var stickersButton: TextView

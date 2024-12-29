@@ -12,7 +12,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zendiary.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
-import com.example.zendiary.ui.profile.StoreFragment
+import com.example.zendiary.ui.profile.OwnedStickersFragment
+
+
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -68,14 +73,19 @@ class MainActivity : AppCompatActivity() {
         val navViewDrawer: NavigationView = findViewById(R.id.nav_view_drawer)
         navViewDrawer.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.naviga -> { // Ensure this ID matches the one in your navigation drawer menu XML
-                    findNavController(navController).navigate(R.id.action_global_ownedStickersFragment)
+                R.id.nav_owned_stickers -> {
+                    // Navigate to the OwnedStickersFragment
+                    val fragment = OwnedStickersFragment()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment) // Replace with your container ID
+                        .addToBackStack(null) // Add to back stack to allow back navigation
+                        .commit()
                 }
-                // Add other cases here for additional navigation items
             }
-            drawerLayout.closeDrawer(GravityCompat.START)
+            drawerLayout.closeDrawer(GravityCompat.START) // Close the drawer after selecting
             true
         }
+
 
 
         // Add a listener to show/hide BottomNavigationView based on the destination

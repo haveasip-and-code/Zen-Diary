@@ -31,4 +31,9 @@
             android:icon="@android:color/transparent"
             android:layout="@layout/menu_divider" />
     </group>
+
+    <item
+        android:id="@+id/nav_owned_stickers"
+        android:title="Owned Stickers"
+         />
 </menu>
