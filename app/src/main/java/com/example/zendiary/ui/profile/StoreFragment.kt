@@ -3,6 +3,8 @@ package com.example.zendiary.ui.profile
 import android.annotation.SuppressLint
 import com.example.zendiary.R
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +40,10 @@ class StoreFragment : Fragment()
     private var storeItems: MutableList<StoreItem>? = null
     private var userId: String? = Global.userId
 
+
+    private lateinit var ownedButton: TextView
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +55,7 @@ class StoreFragment : Fragment()
         // Initialize buttons and text views
         stickersButton = root.findViewById(R.id.Stickers)
         pagesButton = root.findViewById(R.id.Pages)
+        ownedButton = root.findViewById(R.id.Owned)
         coinFlowerTextView = root.findViewById(R.id.coinFlower)
 
         // Retrieve user ID from arguments or set default
@@ -76,14 +83,28 @@ class StoreFragment : Fragment()
         stickersButton.setOnClickListener {
             stickersButton.setBackgroundResource(R.drawable.green_cornered_bg)
             pagesButton.setBackgroundResource(R.drawable.white_cornered_bg)
+            ownedButton.setBackgroundResource(R.drawable.white_cornered_bg)
             loadStoreItems("stickers")
         }
 
         pagesButton.setOnClickListener {
             pagesButton.setBackgroundResource(R.drawable.green_cornered_bg)
             stickersButton.setBackgroundResource(R.drawable.white_cornered_bg)
+            ownedButton.setBackgroundResource(R.drawable.white_cornered_bg)
             loadStoreItems("themes")
         }
+
+
+
+
+
+        ownedButton.setOnClickListener {
+            ownedButton.setBackgroundResource(R.drawable.green_cornered_bg)
+            stickersButton.setBackgroundResource(R.drawable.white_cornered_bg)
+            pagesButton.setBackgroundResource(R.drawable.white_cornered_bg)
+            loadOwnedItems()
+        }
+
 
 
         buyFlowerButton = root.findViewById(R.id.buyFlower)
@@ -273,17 +294,133 @@ class StoreFragment : Fragment()
             if (task.isSuccessful) {
                 Log.d("StoreFragment", "Successfully purchased: ${storeItem.name}")
 
-                // Reload the store to reflect updated purchases
-                //loadStoreItems(userPurchasedRef.parent?.key.toString())
+                // Provide feedback to the user
+                Toast.makeText(requireContext(), "${storeItem.name} purchased successfully!!!!!!", Toast.LENGTH_SHORT).show()
+
+                // Delay reload by 1 second
+                Handler(Looper.getMainLooper()).postDelayed({
+                    reloadFragment()
+                }, 1000) // 1-second delay
             } else {
                 Log.e("StoreFragment", "Failed to purchase item: ${storeItem.name}")
+                Toast.makeText(requireContext(), "Purchase failed. Please try again.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    // Function to reload the fragment
+
+
+
+
+
+
+    private fun loadOwnedItems() {
+        val purchasedThemesRef = database!!.getReference("users/$userId/store/purchasedThemes")
+        val purchasedStickersRef = database!!.getReference("users/$userId/store/purchasedStickers")
+        val themesRef = database!!.getReference("store/themes")
+        val stickersRef = database!!.getReference("store/stickers")
+
+        val ownedItems = mutableSetOf<String>()
+
+        fun fetchStoreItems(categoryRef: DatabaseReference, purchasedNames: Set<String>) {
+            categoryRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (itemSnapshot in snapshot.children) {
+                        val itemName = itemSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
+
+                        // Skip items already purchased
+                        if (!purchasedNames.contains(itemName)) {
+                            Log.d("StoreFragment", "Skipping purchased item: $itemName")
+                            continue
+                        }
+
+                        val imageUrl = itemSnapshot.child("image").getValue(String::class.java)
+                            ?: "https://i.ibb.co/mBFVZgM/paper-default.png"
+
+                        val price = itemSnapshot.child("price").let { priceSnapshot ->
+                            when {
+                                priceSnapshot.value is Double -> priceSnapshot.getValue(Double::class.java)
+                                priceSnapshot.value is String -> priceSnapshot.getValue(String::class.java)
+                                    ?.toDoubleOrNull() ?: 0.99
+                                else -> 0.99
+                            }
+                        }
+
+                        // Log the store item details
+                        Log.d("StoreFragment", "Adding item: $itemName, Price: $price")
+
+                        val item = StoreItem(itemName, price ?: 0.99, imageUrl)
+                        storeItems!!.add(item) // Add the item to the list
+                    }
+                    adapter?.notifyDataSetChanged() // Notify adapter about data changes
+                    Log.d("StoreFragment", "Final Store Items: $storeItems")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseError", "Failed to load store items: ${error.message}")
+                }
+            })
+        }
+
+        // Fetch purchased themes and stickers
+        purchasedThemesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(themesSnapshot: DataSnapshot) {
+                ownedItems.addAll(themesSnapshot.children.mapNotNull { it.key })
+                purchasedStickersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(stickersSnapshot: DataSnapshot) {
+                        ownedItems.addAll(stickersSnapshot.children.mapNotNull { it.key })
+                        Log.d("StoreFragment", "Owned Items: $ownedItems")
+
+                        // Clear the existing list
+                        storeItems!!.clear()
+
+                        // Fetch both themes and stickers from the store
+                        fetchStoreItems(themesRef, ownedItems)
+                        fetchStoreItems(stickersRef, ownedItems)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("FirebaseError", "Failed to load purchased stickers: ${error.message}")
+                    }
+                })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseError", "Failed to load purchased themes: ${error.message}")
+            }
+        })
     }
 
 
 
 
+//    // Function to reload the current fragment
+//    private fun reloadFragment() {
+//        val currentFragment = parentFragmentManager.findFragmentById(R.id.fragment_container)
+//        if (currentFragment != null) {
+//            parentFragmentManager.beginTransaction()
+//                .detach(currentFragment) // Detach the fragment
+//                .attach(currentFragment) // Reattach it to refresh
+//                .commit()
+//        }
+//    }
 
 
+
+    private fun reloadFragment() {
+        Log.e("StoreFragment", "Reloading Fragment.........")
+        parentFragmentManager.beginTransaction()
+            .detach(this) // Detach the current fragment
+            .attach(this) // Reattach the current fragment to reload
+            .commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reload data
+        loadStoreItems("stickers") // Reload items based on the current category
+        loadUserBalance() // Reload user balance
+    }
 }

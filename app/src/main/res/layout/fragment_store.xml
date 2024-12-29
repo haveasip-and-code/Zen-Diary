@@ -114,7 +114,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/josefin_sans_bold"
-        android:text="Pages"
+        android:text="Themes"
         android:textColorLink="#4D5036"
         android:textSize="20dp"
         app:layout_constraintStart_toEndOf="@id/Stickers"
@@ -123,6 +123,21 @@
         android:layout_margin="20dp"
         android:padding="5dp"
         />
+
+        <TextView
+            android:id="@+id/Owned"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/josefin_sans_bold"
+            android:text="Owned"
+            android:textColorLink="#4D5036"
+            android:textSize="20dp"
+            app:layout_constraintStart_toEndOf="@id/Pages"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/white_cornered_bg"
+            android:layout_margin="20dp"
+            android:padding="5dp"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
