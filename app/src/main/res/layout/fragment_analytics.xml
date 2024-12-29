@@ -132,7 +132,7 @@
 
     <!-- Recommendations -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvRecommendations"
+        android:id="@+id/rvDayPreview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/llTopBarContainer"

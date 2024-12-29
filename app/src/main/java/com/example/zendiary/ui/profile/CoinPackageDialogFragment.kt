@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
@@ -22,7 +21,7 @@ class CoinPackageDialogFragment : DialogFragment() {
     private var userId: String = ""
     private var callback: OnPackageSelectedListener? = null
     interface OnPackageSelectedListener {
-        fun onPackageSelected(packageName: String)
+        fun onPackageSelected(packageName: String, packageCoin: Int)
     }
 
 
@@ -102,9 +101,9 @@ class CoinPackageDialogFragment : DialogFragment() {
                     val coinPackage = CoinPackage(name, coins, price)
                     coinPackages.add(coinPackage)
                 }
-                recyclerView.adapter = CoinPackageAdapter(coinPackages) { packageName ->
+                recyclerView.adapter = CoinPackageAdapter(coinPackages) { packageName, packageCoin ->
                     Log.d("CoinPackageDialog", "Selected package: $packageName")
-                    callback?.onPackageSelected(packageName)  // This triggers the onPackageSelected method in StoreFragment
+                    callback?.onPackageSelected(packageName, packageCoin)  // This triggers the onPackageSelected method in StoreFragment
                     dismiss() // Close the dialog after notifying
                 }
             }

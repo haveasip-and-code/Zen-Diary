@@ -240,6 +240,10 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
     // Function to set up button click listeners
     private fun setupButtonListeners(view: View) {
 
+        view.findViewById<Button>(R.id.btn_back).setOnClickListener{
+            findNavController().navigateUp()
+        }
+
         ibAddImage = view.findViewById(R.id.ib_add_image)
         ibAddImage.setOnClickListener {
             // Show the bottom sheet dialog when the image button is clicked

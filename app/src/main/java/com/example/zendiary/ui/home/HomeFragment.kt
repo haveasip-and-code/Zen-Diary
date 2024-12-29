@@ -1,9 +1,11 @@
 package com.example.zendiary.ui.home
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -41,16 +43,20 @@ class HomeFragment : Fragment() {
         // Initialize Firebase Database reference
         database = FirebaseDatabase.getInstance()
 
-
-
-
         // Initialize RecyclerView Adapter
-        adapter = NotesAdapter(notes) { note ->
-            val bundle = Bundle().apply {
-                putParcelable("note", note) // Ensure `Note` implements Parcelable
+        adapter = NotesAdapter(
+            notes,
+            onNoteClicked = { note ->
+                val bundle = Bundle().apply {
+                    putParcelable("note", note) // Ensure `Note` implements Parcelable
+                }
+                findNavController().navigate(R.id.journalFragment, bundle)
+            },
+            onLongClick = { note ->
+                showDeleteConfirmationDialog(note) // Show confirmation dialog
             }
-            findNavController().navigate(R.id.journalFragment, bundle)
-        }
+        )
+
         binding.recyclerViewNotes.adapter = adapter
 
         // Set GridLayoutManager with 2 columns
@@ -64,6 +70,31 @@ class HomeFragment : Fragment() {
 
         return root
     }
+
+    private fun showDeleteConfirmationDialog(note: Note) {
+        // Create a confirmation dialog
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Entry")
+            .setMessage("Are you sure you want to delete this entry?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteEntryFromFirebase(note)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteEntryFromFirebase(note: Note) {
+        val entryRef = database.getReference("users/$userId/entries/${note.entryId}")
+        entryRef.removeValue().addOnSuccessListener {
+            // Remove the note locally and notify adapter
+            notes.remove(note)
+            adapter.notifyDataSetChanged()
+        }.addOnFailureListener {
+            // Show an error message if deletion fails
+            Toast.makeText(requireContext(), "Failed to delete entry", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun loadNotesFromFirebase(userId: String?) {
         val entriesRef = database.getReference("users/$userId/entries")
