@@ -16,7 +16,7 @@ import com.example.zendiary.R
 
 class CoinPackageAdapter(
     private val packages: List<CoinPackage>,
-    private val onPackageClick: (String) -> Unit
+    private val onPackageClick: (String, Int) -> Unit
 
 ) : RecyclerView.Adapter<CoinPackageAdapter.CoinPackageViewHolder>() {
 
@@ -29,7 +29,7 @@ class CoinPackageAdapter(
             packageName.text = coinPackage.name
             packageCoins.text = "${coinPackage.coins} Coins"
             packagePrice.text = "${coinPackage.price} VND"
-            itemView.setOnClickListener { onPackageClick(coinPackage.name) } // Pass packageName
+            itemView.setOnClickListener { onPackageClick(coinPackage.name, coinPackage.coins) } // Pass packageName
         }
     }
 

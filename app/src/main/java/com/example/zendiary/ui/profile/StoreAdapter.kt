@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.zendiary.ui.profile.StoreItem
 import com.squareup.picasso.Picasso
-import java.lang.String
 
 
 class StoreAdapter(storeItems: List<StoreItem>,
@@ -29,11 +27,11 @@ class StoreAdapter(storeItems: List<StoreItem>,
 
         holder.itemView.setOnClickListener { onClick(item) } // Call click listener
 
-        holder.nameTextView.setText(item.getName())
+        holder.nameTextView.text = item.name
         holder.priceTextView.text = String.format("%.2f", item.getPrice())
 
         // Load image using Picasso or Glide
-        Picasso.get().load(item.getImageUrl()).into(holder.imageView)
+        Picasso.get().load(item.imageUrl).into(holder.imageView)
 
     }
 
