@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.R
 import com.example.zendiary.ui.analytics.models.DayPreview
+import androidx.core.content.ContextCompat
 
 class DayPreviewAdapter(
     private val dayPreviews: MutableList<DayPreview> = mutableListOf()
@@ -42,6 +43,28 @@ class DayPreviewAdapter(
             tvHeader.text = dayPreview.title
             tvPreview.text = dayPreview.snippet
             tvAnalyticsResult.text = dayPreview.result
+
+            // Accessing context from itemView
+            val context = itemView.context
+
+            when (dayPreview.result) {
+                "positive" -> {
+                    val tint = ContextCompat.getColorStateList(context, R.color.positive_color)
+                    tvAnalyticsResult.backgroundTintList = tint
+                }
+                "neutral" -> {
+                    val tint = ContextCompat.getColorStateList(context, R.color.neutral_color)
+                    tvAnalyticsResult.backgroundTintList = tint
+                }
+                "negative" -> {
+                    val tint = ContextCompat.getColorStateList(context, R.color.negative_color)
+                    tvAnalyticsResult.backgroundTintList = tint
+                }
+                else -> {
+                    val tint = ContextCompat.getColorStateList(context, R.color.default_color)
+                    tvAnalyticsResult.backgroundTintList = tint
+                }
+            }
 
             // Load the mood icon dynamically
             ibImagePreview.setImageResource(dayPreview.moodIconResId)

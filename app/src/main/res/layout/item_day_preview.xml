@@ -14,7 +14,7 @@
         android:padding="7dp"
         android:text="Positive"
         android:textSize="14sp"
-        android:textColor="#7D825C"
+        android:textColor="@color/white"
         android:background="@drawable/bg_recommendation_menu"
         android:backgroundTint="#E0E7B5" />
 
@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/tv_preview"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:text="Recommended for lunch time"
                 android:textSize="14sp"

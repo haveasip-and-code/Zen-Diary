@@ -181,7 +181,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
                     override fun onSuccess(result: String?) {
                         // Parsing the Pair back from the String (if needed)
                         val pair = result
-                            ?.removePrefix("Pair(") // Remove the "Pair(" prefix
+                            ?.removePrefix("(") // Remove the "(" prefix
                             ?.removeSuffix(")")    // Remove the ")" suffix
                             ?.split(", ")          // Split by ", "
 

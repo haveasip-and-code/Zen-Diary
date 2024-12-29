@@ -58,6 +58,10 @@ class PaymentFragment : Fragment() {
             adapter.updateData(paymentMethods) // Update RecyclerView adapter with new data
         }
 
+        binding.ibBackButtonPayment.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         // Set up "Choose" button click
         binding.btnConfirmPaymentMethod.setOnClickListener {
             val selectedMethod = viewModel.paymentMethods.value?.find { it.isSelected }
@@ -90,32 +94,23 @@ class PaymentFragment : Fragment() {
             userBalanceRef.get().addOnSuccessListener { snapshot ->
                 val currentBalance = snapshot.getValue(Int::class.java) ?: 0
 
-                if (currentBalance >= packageCoin) {
-                    // Deduct the package coin from the balance
-                    val newBalance = currentBalance - packageCoin
-                    userBalanceRef.setValue(newBalance).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Payment confirmed! New balance: $newBalance",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            // Navigate to the store fragment
-                            findNavController().navigate(R.id.action_paymentFragment_to_storeFragment)
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "Failed to update balance. Please try again.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                val newBalance = currentBalance + packageCoin
+                userBalanceRef.setValue(newBalance).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Payment confirmed! New balance: $newBalance",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Navigate to the store fragment
+                        findNavController().navigate(R.id.action_paymentFragment_to_storeFragment)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to update balance. Please try again.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Insufficient balance. Please choose a different package.",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }.addOnFailureListener {
                 Toast.makeText(requireContext(), "Failed to fetch balance.", Toast.LENGTH_SHORT).show()
