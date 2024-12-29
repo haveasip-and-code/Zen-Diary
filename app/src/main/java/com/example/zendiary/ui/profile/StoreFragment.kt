@@ -39,6 +39,7 @@ class StoreFragment : Fragment()
     private var database: FirebaseDatabase? = null
     private var storeItems: MutableList<StoreItem>? = null
     private var userId: String? = Global.userId
+    private var currentCategory: String = "stickers"  // Default category is "stickers"
 
 
     private lateinit var ownedButton: TextView
@@ -84,25 +85,24 @@ class StoreFragment : Fragment()
             stickersButton.setBackgroundResource(R.drawable.green_cornered_bg)
             pagesButton.setBackgroundResource(R.drawable.white_cornered_bg)
             ownedButton.setBackgroundResource(R.drawable.white_cornered_bg)
-            loadStoreItems("stickers")
+            currentCategory = "stickers"  // Set the current category
+            loadStoreItems(currentCategory) // Load store items for "stickers"
         }
 
         pagesButton.setOnClickListener {
             pagesButton.setBackgroundResource(R.drawable.green_cornered_bg)
             stickersButton.setBackgroundResource(R.drawable.white_cornered_bg)
             ownedButton.setBackgroundResource(R.drawable.white_cornered_bg)
-            loadStoreItems("themes")
+            currentCategory = "themes"  // Set the current category
+            loadStoreItems(currentCategory) // Load store items for "themes"
         }
-
-
-
-
 
         ownedButton.setOnClickListener {
             ownedButton.setBackgroundResource(R.drawable.green_cornered_bg)
             stickersButton.setBackgroundResource(R.drawable.white_cornered_bg)
             pagesButton.setBackgroundResource(R.drawable.white_cornered_bg)
-            loadOwnedItems()
+            currentCategory = "owned"  // Set the current category
+            loadOwnedItems() // Load owned items, this might need modification for dynamic category
         }
 
 
@@ -409,13 +409,23 @@ class StoreFragment : Fragment()
 
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun reloadFragment() {
         Log.e("StoreFragment", "Reloading Fragment.........")
+
+        loadStoreItems(currentCategory) // Reload items based on the current category
+        loadUserBalance() // Reload user balance
+
         parentFragmentManager.beginTransaction()
             .detach(this) // Detach the current fragment
             .attach(this) // Reattach the current fragment to reload
             .commit()
+
+        // Assuming you have a reference to your RecyclerView
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.recycler_view_notes)
+        recyclerView?.adapter?.notifyDataSetChanged() // Notify the adapter to refresh
     }
+
 
     override fun onResume() {
         super.onResume()
