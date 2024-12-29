@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -228,22 +229,30 @@ class StoreFragment : Fragment()
 
             if (isPurchased) {
                 Log.d("StoreFragment", "User already owns: ${storeItem.name}")
+                Toast.makeText(requireContext(), "You already own: ${storeItem.name}", Toast.LENGTH_SHORT).show()
             } else {
                 balanceRef.get().addOnSuccessListener { balanceSnapshot ->
                     val currentBalance = balanceSnapshot.getValue(Int::class.java) ?: 0
                     if (currentBalance >= storeItem.price) {
                         purchaseItem(storeItem, purchasedRef, balanceRef, currentBalance)
+
                     } else {
                         Log.d("StoreFragment", "Insufficient balance for: ${storeItem.name}")
+                        Toast.makeText(requireContext(), "Insufficient balance to purchase: ${storeItem.name}", Toast.LENGTH_SHORT).show()
                     }
                 }.addOnFailureListener {
                     Log.e("StoreFragment", "Failed to retrieve user balance")
+                    Toast.makeText(requireContext(), "Failed to retrieve your balance. Please try again.", Toast.LENGTH_SHORT).show()
                 }
             }
+            Toast.makeText(requireContext(), "Purchase successful", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             Log.e("StoreFragment", "Failed to retrieve purchased items")
+            Toast.makeText(requireContext(), "Failed to retrieve purchased items. Please try again.", Toast.LENGTH_SHORT).show()
         }
+
     }
+
 
 
     @SuppressLint("RestrictedApi")
