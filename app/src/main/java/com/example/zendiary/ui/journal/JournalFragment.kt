@@ -310,6 +310,10 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
             }
         }
 
+        view.findViewById<ImageButton>(R.id.delete_btn).setOnClickListener {
+            showDeleteConfirmationDialog()
+        }
+
         view.findViewById<Button>(R.id.btn_save).setOnClickListener {
             headerEntry = editHeaderText.text.toString()
             journalText = editText.text.toString()
@@ -478,8 +482,31 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
         showToast("Journal entry saved!")
     }
 
+    private fun deleteEntryFirebase() {
+        userId?.let { user ->
+            entryId?.let { entry ->
+                val database = FirebaseDatabase.getInstance()
+                val entryRef = database.getReference("users/$user/entries/$entry")
+
+                // Delete the entry from Firebase
+                entryRef.removeValue().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("Firebase", "Entry deleted successfully.")
+                        showToast("Journal entry deleted!")
+                    } else {
+                        Log.e("Firebase", task.exception?.message ?: "Error occurred while deleting entry.")
+                        showToast("Failed to delete entry.")
+                    }
+                }
+            } ?: showToast("Entry ID is null.")
+        } ?: showToast("User ID is null.")
+    }
+
+
     private fun deleteJournalEntry() {
-//        viewModel.deleteEntry()
+        if (Global.isNewEntry == false) {
+            deleteEntryFirebase()
+        }
         showToast("Journal entry deleted!")
     }
 

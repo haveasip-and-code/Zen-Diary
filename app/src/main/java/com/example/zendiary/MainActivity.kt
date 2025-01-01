@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         // Set up click listener for the journal button
         binding.journalButton.setOnClickListener {
             navController.navigate(R.id.journalFragment)
+            Global.isNewEntry = true
         }
 
         drawerLayout = findViewById(R.id.drawer_layout)
