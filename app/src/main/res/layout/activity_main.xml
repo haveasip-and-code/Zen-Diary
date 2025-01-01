@@ -77,6 +77,7 @@
                 android:background="#4D4D5036" />
 
             <RelativeLayout
+                android:id="@+id/rl_themes_and_sticker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp">
@@ -85,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
-                    android:contentDescription="Theme"
+                    android:contentDescription="Theme "
                     android:src="@drawable/ic_theme"
                     android:paddingEnd="130dp"
                     />
@@ -94,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="35dp"
                     android:paddingVertical="1dp"
-                    android:text="Theme"
+                    android:text="Theme N Sticker"
                     android:textSize="16sp"
                     />
 

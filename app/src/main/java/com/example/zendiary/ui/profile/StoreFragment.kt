@@ -257,6 +257,7 @@ class StoreFragment : Fragment()
                     if (currentBalance >= storeItem.price) {
                         purchaseItem(storeItem, purchasedRef, balanceRef, currentBalance)
 
+
                     } else {
                         Log.d("StoreFragment", "Insufficient balance for: ${storeItem.name}")
                         Toast.makeText(requireContext(), "Insufficient balance to purchase: ${storeItem.name}", Toast.LENGTH_SHORT).show()
@@ -266,7 +267,7 @@ class StoreFragment : Fragment()
                     Toast.makeText(requireContext(), "Failed to retrieve your balance. Please try again.", Toast.LENGTH_SHORT).show()
                 }
             }
-            Toast.makeText(requireContext(), "Purchase successful", Toast.LENGTH_SHORT).show()
+
         }.addOnFailureListener {
             Log.e("StoreFragment", "Failed to retrieve purchased items")
             Toast.makeText(requireContext(), "Failed to retrieve purchased items. Please try again.", Toast.LENGTH_SHORT).show()
