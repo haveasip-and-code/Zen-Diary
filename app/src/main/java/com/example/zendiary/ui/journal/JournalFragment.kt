@@ -169,11 +169,24 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
             Log.e("JournalFragment", "DrawerLayout is null")
         }
 
-        // Kiểm tra xem popup đã hiển thị chưa từ SharedPreferences
+        // Check if the popup has been displayed using SharedPreferences
         view.post {
-            //showPopup()
+            // Uncomment and customize the showPopup function if needed
+            // showPopup()
             savePopupState(false)
         }
+
+        val themesAndStickerView = requireActivity().findViewById<View>(R.id.rl_themes_and_sticker)
+        if (themesAndStickerView == null) {
+            Log.e("JournalFragment", "rl_themes_and_sticker not found in layout!")
+        }
+
+        // Handle click on the relative view to navigate to the StoreFragment
+        requireActivity().findViewById<View>(R.id.ib_theme)?.setOnClickListener {
+            Log.e("JournalFragment", "Going to Store")
+            findNavController().navigate(R.id.action_journalFragment_to_storeFragment)
+        }
+
 
         userId?.let {
             entryId?.let { it1 ->

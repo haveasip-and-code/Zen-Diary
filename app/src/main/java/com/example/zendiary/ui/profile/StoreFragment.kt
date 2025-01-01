@@ -122,9 +122,10 @@ class StoreFragment : Fragment()
         // Back button setup
         val backButton: ImageButton = root.findViewById(R.id.backButtonProfileEdit)
         backButton.setOnClickListener {
-            // Navigate back to the previous fragment
-            findNavController().navigate(R.id.action_storeFragment_to_navigation_profile)
+            // Navigate back to the previous fragment on the stack
+            findNavController().popBackStack()
         }
+
 
 
         // Load initial items (stickers) and balance

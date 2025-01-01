@@ -145,6 +145,10 @@
         <action
             android:id="@+id/action_journalFragment_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_journalFragment_to_storeFragment"
+            app:destination="@id/storeFragment" />
+
     </fragment>
 
     <fragment
