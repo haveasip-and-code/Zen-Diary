@@ -49,7 +49,7 @@ class StoreFragment : Fragment()
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the store fragment layout
         val root: View = inflater.inflate(R.layout.fragment_store, container, false)
 
@@ -133,9 +133,10 @@ class StoreFragment : Fragment()
     }
 
 
-    override fun onPackageSelected(packageName: String) {
+    override fun onPackageSelected(packageName: String, packageCoin: Int) {
         val bundle = Bundle().apply {
             putString("selectedPackage", packageName)  // Pass the selected package name
+            putInt("packageCoin", packageCoin) // Pass the coin value
         }
 
         // Navigate to the PaymentFragment with the package name

@@ -11,7 +11,8 @@ import com.example.zendiary.utils.Note
 
 class NotesAdapter(
     private val notes: List<Note>,
-    private val onNoteClicked: (Note) -> Unit
+    private val onNoteClicked: (Note) -> Unit,
+    private val onLongClick: (Note) -> Unit
 ) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,19 +35,12 @@ class NotesAdapter(
         holder.previewText.text = currentNote.previewText ?: "No Preview"
         holder.date.text = currentNote.date ?: "No Date"
 
-//        if (currentNote.imageUrl.isNullOrEmpty()) {
-//            holder.noteImage.visibility = View.GONE
-//        } else {
-//            holder.noteImage.visibility = View.VISIBLE
-//            Glide.with(holder.itemView.context)
-//                .load(currentNote.imageUrl)
-//                .placeholder(R.drawable.placeholder_image)
-//                .error(R.drawable.error_image)
-//                .into(holder.noteImage)
-//        }
-
         holder.itemView.setOnClickListener {
             onNoteClicked(currentNote)
+        }
+        holder.itemView.setOnLongClickListener {
+            onLongClick(currentNote) // Trigger long-click callback
+            true // Indicate the event was handled
         }
     }
 

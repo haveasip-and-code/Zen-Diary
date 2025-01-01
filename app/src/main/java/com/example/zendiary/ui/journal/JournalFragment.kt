@@ -181,7 +181,7 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
                     override fun onSuccess(result: String?) {
                         // Parsing the Pair back from the String (if needed)
                         val pair = result
-                            ?.removePrefix("Pair(") // Remove the "Pair(" prefix
+                            ?.removePrefix("(") // Remove the "(" prefix
                             ?.removeSuffix(")")    // Remove the ")" suffix
                             ?.split(", ")          // Split by ", "
 
@@ -239,6 +239,10 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
     // Function to set up button click listeners
     private fun setupButtonListeners(view: View) {
+
+        view.findViewById<Button>(R.id.btn_back).setOnClickListener{
+            findNavController().navigateUp()
+        }
 
         ibAddImage = view.findViewById(R.id.ib_add_image)
         ibAddImage.setOnClickListener {

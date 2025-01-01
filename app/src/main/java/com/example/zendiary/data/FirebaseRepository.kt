@@ -7,13 +7,18 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import com.example.zendiary.Global.userId
+import com.example.zendiary.R
+import com.example.zendiary.ui.analytics.models.DayPreview
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
 object FirebaseRepository {
 
-    fun fetchSentimentsForDate(dateIso: String, callback: (List<String>) -> Unit) {
+    fun fetchDayPreviewsForDate(
+        dateIso: String,
+        callback: (List<DayPreview>) -> Unit
+    ) {
         val database = FirebaseDatabase.getInstance()
         val sentimentRef = database.getReference("users/$userId/entries") // Adjust path as needed
 
@@ -21,21 +26,33 @@ object FirebaseRepository {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // Extract just the date part (yyyy-MM-dd) from the input date
                 val targetDate = dateIso.substring(0, 10)
-                val sentiments = mutableListOf<String>() // List to collect sentiment labels
+                val dayPreviews = mutableListOf<DayPreview>() // List to collect DayPreview entries
 
                 for (child in snapshot.children) {
                     // Get the entry date
                     val entryDate = (child.child("date").value as? String)?.substring(0, 10)
                     if (entryDate == targetDate) {
-                        // Add the sentiment label if it exists
-                        val sentimentLabel = child.child("sentiment").child("label").value as? String
-                        if (sentimentLabel != null) {
-                            sentiments.add(sentimentLabel)
-                        }
+                        // Extract the necessary fields
+                        val result = child.child("sentiment").child("label").value as? String ?: "Unknown"
+                        val title = child.child("headerEntry").value as? String ?: "Untitled"
+                        val snippet = child.child("text").value as? String ?: "No content available"
+
+                        // Derive or map the mood icon resource ID based on the sentiment result
+                        val moodIconResId = getMoodIconResId(result)
+
+                        // Add a new DayPreview object to the list
+                        dayPreviews.add(
+                            DayPreview(
+                                result = result,
+                                title = title,
+                                snippet = snippet,
+                                moodIconResId = moodIconResId
+                            )
+                        )
                     }
                 }
-                // Pass all collected sentiment labels to the callback
-                callback(sentiments)
+                // Pass all collected DayPreview objects to the callback
+                callback(dayPreviews)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -44,7 +61,14 @@ object FirebaseRepository {
         })
     }
 
-
+    fun getMoodIconResId(sentiment: String): Int {
+        return when (sentiment.lowercase()) {
+            "positive" -> R.drawable.ic_sentiment_positive
+            "negative" -> R.drawable.ic_sentiment_negative
+            "neutral" -> R.drawable.ic_sentiment_neutral
+            else -> R.drawable.ic_sentiment_neutral // Default icon
+        }
+    }
 
     fun getEntriesCountForUser(
         userId: String,

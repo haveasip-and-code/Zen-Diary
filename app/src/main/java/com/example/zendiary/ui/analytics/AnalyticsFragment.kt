@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zendiary.Global.userId
 import com.example.zendiary.R
 import com.example.zendiary.databinding.FragmentAnalyticsBinding
-import com.example.zendiary.ui.analytics.adapters.RecommendationsAdapter
+import com.example.zendiary.ui.analytics.adapters.DayPreviewAdapter
 import com.example.zendiary.ui.analytics.adapters.WeekDaysAdapter
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -34,7 +34,7 @@ class AnalyticsFragment : Fragment() {
     private val viewModel: AnalyticsViewModel by viewModels()
 
     private lateinit var weekDaysAdapter: WeekDaysAdapter
-    private lateinit var recommendationsAdapter: RecommendationsAdapter
+    private lateinit var dayPreviewAdapter: DayPreviewAdapter
 
     private lateinit var lineChart: LineChart
 
@@ -52,7 +52,7 @@ class AnalyticsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupWeekDaysRecyclerView()
-        setupRecommendationsRecyclerView()
+        setupDayPreviewRecyclerView()
 
         setupDayWeekToggle()
 
@@ -93,7 +93,7 @@ class AnalyticsFragment : Fragment() {
     private fun setupWeekDaysRecyclerView() {
         weekDaysAdapter = WeekDaysAdapter { selectedDay ->
             viewModel.updateSelectedDay(selectedDay) // Notify ViewModel when a day is selected
-            viewModel.loadRecommendationsForDay(selectedDay.split(" ")[0])
+            viewModel.loadPreviewsForDay(selectedDay.split(" ")[0])
         }
         binding.rvWeekDays.apply {
             adapter = weekDaysAdapter
@@ -101,10 +101,10 @@ class AnalyticsFragment : Fragment() {
         }
     }
 
-    private fun setupRecommendationsRecyclerView() {
-        recommendationsAdapter = RecommendationsAdapter()
-        binding.rvRecommendations.apply {
-            adapter = recommendationsAdapter
+    private fun setupDayPreviewRecyclerView() {
+        dayPreviewAdapter = DayPreviewAdapter()
+        binding.rvDayPreview.apply {
+            adapter = dayPreviewAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
@@ -193,14 +193,14 @@ class AnalyticsFragment : Fragment() {
         }
 
         // Observe recommendations list
-        viewModel.recommendations.observe(viewLifecycleOwner) { recommendations ->
-            recommendationsAdapter.submitList(recommendations)
+        viewModel.dayPreviews.observe(viewLifecycleOwner) { previews ->
+            dayPreviewAdapter.submitList(previews)
         }
 
         // Observe day/week toggle state
         viewModel.isDayViewSelected.observe(viewLifecycleOwner) { isDayMode ->
             binding.rvWeekDays.visibility = if (isDayMode) View.VISIBLE else View.GONE
-            binding.rvRecommendations.visibility = if (isDayMode) View.VISIBLE else View.GONE
+            binding.rvDayPreview.visibility = if (isDayMode) View.VISIBLE else View.GONE
             binding.tvRecommendations.visibility = if (isDayMode) View.GONE else View.GONE
             binding.tvSelectedWeek.visibility = if (!isDayMode) View.VISIBLE else View.GONE
             binding.btnNextWeek.visibility = if (!isDayMode) View.GONE else View.GONE
@@ -248,4 +248,11 @@ class AnalyticsFragment : Fragment() {
         // Reset the toggle state to "Day" when the fragment becomes visible
         viewModel.resetDayView()
     }
+
+    override fun onPause() {
+        super.onPause()
+        // Reset the DayPreviewAdapter
+        dayPreviewAdapter.submitList(emptyList()) // Clear the list
+    }
+
 }

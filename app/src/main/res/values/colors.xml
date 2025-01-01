@@ -15,4 +15,5 @@
     <color name="neutral_color">#ABB27A</color>
     <color name="positive_color">#E0E7B5</color>
     <color name="selected_round_button">#4D5036</color>
+    <color name="default_color">#E0E7B5</color>
 </resources>
