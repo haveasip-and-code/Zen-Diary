@@ -1,5 +1,6 @@
 package com.example.zendiary.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.zendiary.databinding.FragmentProfileBinding
 import androidx.navigation.fragment.findNavController
+import com.example.zendiary.MainActivity
 import com.example.zendiary.R
+import com.example.zendiary.ui.home.LogIn
 
 class ProfileFragment : Fragment() {
 
@@ -99,10 +102,11 @@ class ProfileFragment : Fragment() {
         // Sử dụng ViewBinding thay vì findViewById cho logout_button
         val logoutButton = binding.logoutButton
         logoutButton.setOnClickListener {
-            // Điều hướng sang PinCodeFragment
-            findNavController().navigate(R.id.action_profileFragment_to_pinCode)
+            // If in Fragment, use the activity context to start the Intent
+            val intent = Intent(requireActivity(), LogIn::class.java)
+            startActivity(intent)
+            requireActivity().finish() // Finish the current Activity (Profile Activity)
         }
-
         return root
     }
 
