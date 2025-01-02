@@ -20,45 +20,40 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.zendiary.Global
 import com.example.zendiary.R
 import com.example.zendiary.backend.reminder.ReminderBroadcastReceiver
+import com.example.zendiary.data.FirebaseRepository.saveReminderOption
 import java.util.Calendar
 
 class ReminderFragment : Fragment() {
-
-    private var isReminderEnabled = false // Tracks the switch state
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate layout cho fragment
+        // Inflate layout for fragment
         val rootView = inflater.inflate(R.layout.fragment_reminder, container, false)
 
-        // Thiết lập sự kiện cho nút "Back"
+        // Set up the "Back" button
         val backButton: ImageButton = rootView.findViewById(R.id.back_button_reminder)
         backButton.setOnClickListener {
-            // Sử dụng NavController để quay lại ProfileFragment
-            findNavController().navigateUp() // Điều này sẽ đưa bạn quay lại fragment trước đó
+            // Navigate back to the previous fragment
+            findNavController().navigateUp()
         }
 
-        val submitButton: ImageButton = rootView.findViewById(R.id.submit_button_reminder)
-        submitButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Reminder Time Saved", Toast.LENGTH_SHORT).show()
-        }
-
-        // Cấu hình các view của fragment_reminder
+        // Configure the fragment views
         configureReminderFragmentViews(rootView)
 
         return rootView
     }
 
     private fun configureReminderFragmentViews(rootView: View) {
-        // Initialize and configure setTime TextView and NumberPicker within fragment_reminder
         val hourPicker = rootView.findViewById<NumberPicker>(R.id.hour_picker)
         val minPicker = rootView.findViewById<NumberPicker>(R.id.minute_picker)
         val repeatTextView = rootView.findViewById<TextView>(R.id.repeatTextView)
         val reminderSwitch = rootView.findViewById<SwitchCompat>(R.id.reminder_switch)
+        val submitButton = rootView.findViewById<ImageButton>(R.id.submit_button_reminder)
 
         hourPicker.minValue = 0
         hourPicker.maxValue = 23
@@ -66,14 +61,63 @@ class ReminderFragment : Fragment() {
         minPicker.minValue = 0
         minPicker.maxValue = 59
 
+        // Load settings from Global
+        hourPicker.value = Global.reminderHour
+        minPicker.value = Global.reminderMinute
+        repeatTextView.text = Global.reminderRepeat
+        reminderSwitch.isChecked = Global.isReminderEnabled
+
         repeatTextView.setOnClickListener {
-            showPopupMenu(repeatTextView)  // Show the PopupMenu when clicked
+            showPopupMenu(repeatTextView)
         }
 
         reminderSwitch.setOnCheckedChangeListener { _, isChecked ->
-            isReminderEnabled = isChecked
+            Global.isReminderEnabled = isChecked
             if (!isChecked) cancelReminder() // Turn off the reminder
         }
+
+        submitButton.setOnClickListener {
+            // Save settings to Global
+            Global.reminderHour = hourPicker.value
+            Global.reminderMinute = minPicker.value
+            Global.reminderRepeat = repeatTextView.text.toString()
+
+            // Save the reminder settings to Firebase (or any other storage mechanism you are using)
+            val reminderOptions = mapOf(
+                "hour" to Global.reminderHour,
+                "minute" to Global.reminderMinute,
+                "repeat" to Global.reminderRepeat,
+                "isEnabled" to Global.isReminderEnabled
+            )
+
+            // Save the reminder options using Firebase
+            saveReminderOption(reminderOptions) { success ->
+                if (success) {
+                    // Show a toast message
+                    Toast.makeText(requireContext(), "Reminder Saved!", Toast.LENGTH_SHORT).show()
+
+                    // Schedule the reminder if enabled
+                    if (Global.isReminderEnabled) {
+                        if (Global.reminderRepeat == "Never") {
+                            scheduleSingleDayReminder()
+                        } else {
+                            scheduleRepeatingReminder(
+                                Global.reminderHour,
+                                Global.reminderMinute,
+                                Global.reminderRepeat
+                            )
+                        }
+                    }
+
+                    // Navigate back to the previous screen
+                    findNavController().navigateUp()
+                } else {
+                    // Show a toast if saving failed
+                    Toast.makeText(requireContext(), "Failed to save reminder!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
     }
 
     private fun showPopupMenu(view: View) {
@@ -108,7 +152,7 @@ class ReminderFragment : Fragment() {
 
     private fun setRepeatDay(textView: TextView, day: String): Boolean {
         textView.text = day
-        if (isReminderEnabled) {
+        if (Global.isReminderEnabled) {
             val hour = getHourFromPicker()
             val minute = getMinuteFromPicker()
             scheduleRepeatingReminder(hour, minute, day)
@@ -117,12 +161,12 @@ class ReminderFragment : Fragment() {
     }
 
     private fun scheduleSingleDayReminder() {
-        if (!isReminderEnabled) return
+        if (!Global.isReminderEnabled) return
 
         val hour = getHourFromPicker()
         val minute = getMinuteFromPicker()
 
-        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, ReminderBroadcastReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 

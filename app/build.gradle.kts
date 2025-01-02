@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("com.chaquo.python")
 }
 
 android {
@@ -16,6 +17,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            // On Apple silicon, you can omit x86_64.
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
+    }
+
+    chaquopy {
+        defaultConfig {
+            buildPython("C:/Users/Admin/AppData/Local/Programs/Python/Python39/python.exe")
+            pip {
+                install("-r", "requirements.txt")
+            }
+        }
     }
 
     buildTypes {
@@ -59,6 +73,7 @@ dependencies {
     implementation(libs.mpandroidchart.vv310)
     implementation(libs.firebase.storage.ktx)
     implementation("com.squareup.picasso:picasso:2.71828")
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

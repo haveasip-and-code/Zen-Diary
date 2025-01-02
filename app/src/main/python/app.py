@@ -17,5 +17,6 @@ def analyze_sentiment():
     # Return sentiment result
     return jsonify(sentiment_score)
 
-if __name__ == '__main__':
+def run():
     app.run(debug=True)
+

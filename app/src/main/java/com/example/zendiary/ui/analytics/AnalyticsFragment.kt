@@ -1,5 +1,6 @@
 package com.example.zendiary.ui.analytics
 
+import WeekDaysAdapter
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +14,6 @@ import com.example.zendiary.Global.userId
 import com.example.zendiary.R
 import com.example.zendiary.databinding.FragmentAnalyticsBinding
 import com.example.zendiary.ui.analytics.adapters.DayPreviewAdapter
-import com.example.zendiary.ui.analytics.adapters.WeekDaysAdapter
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
