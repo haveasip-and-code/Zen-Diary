@@ -79,23 +79,21 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_bg_home_noti"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/search_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:background="@drawable/bg_home_search_bar"
-        android:drawableLeft="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:hint="Search"
+        android:drawableStart="@drawable/ic_search"
+        android:text="Search"
+        android:paddingEnd="200dp"
+        android:textAllCaps="false"
         android:textSize="20sp"
-        android:inputType="text"
         android:padding="12dp"
-        android:textColor="#000000"
-        android:textColorHint="#B6B6B6"
+        android:textColor="#80000000"
         android:elevation="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_bg_home_noti" />
 
