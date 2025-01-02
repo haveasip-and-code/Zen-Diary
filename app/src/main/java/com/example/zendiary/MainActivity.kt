@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         // Set up click listener for the journal button
         binding.journalButton.setOnClickListener {
             navController.navigate(R.id.journalFragment)
+            Global.isNewEntry = true
         }
 
         drawerLayout = findViewById(R.id.drawer_layout)
@@ -117,8 +118,12 @@ class MainActivity : AppCompatActivity() {
                     // Enable the drawer for JournalFragment
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 }
+                R.id.storeFragment -> {
+                    // Lock the drawer for StoreFragment
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                }
                 else -> {
-                    // Disable the drawer for other fragments
+                    // Lock the drawer for other fragments
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
             }

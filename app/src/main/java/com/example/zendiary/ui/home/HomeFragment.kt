@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Global.isNewEntry = false
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -67,6 +68,8 @@ class HomeFragment : Fragment() {
 
         // Set User Name and Date
         loadUserDataAndDate(userId)
+
+        Global.isNewEntry = false
 
         return root
     }

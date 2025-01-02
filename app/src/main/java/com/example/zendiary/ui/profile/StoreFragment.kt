@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.example.zendiary.Global
+import androidx.appcompat.app.AlertDialog
+
 
 class StoreFragment : Fragment()
     , CoinPackageDialogFragment.OnPackageSelectedListener
@@ -120,9 +122,10 @@ class StoreFragment : Fragment()
         // Back button setup
         val backButton: ImageButton = root.findViewById(R.id.backButtonProfileEdit)
         backButton.setOnClickListener {
-            // Navigate back to the previous fragment
-            findNavController().navigate(R.id.action_storeFragment_to_navigation_profile)
+            // Navigate back to the previous fragment on the stack
+            findNavController().popBackStack()
         }
+
 
 
         // Load initial items (stickers) and balance
@@ -233,6 +236,24 @@ class StoreFragment : Fragment()
 
 
     private fun onStoreItemClick(storeItem: StoreItem) {
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        dialogBuilder.setMessage("Are you sure you want to purchase ${storeItem.name} for ${storeItem.price} coins?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { _, _ ->
+                // Handle the purchase if the user confirms
+                proceedWithPurchase(storeItem)
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                // Dismiss the dialog if the user cancels
+                dialog.dismiss()
+            }
+
+        val alert = dialogBuilder.create()
+        alert.setTitle("Confirm Purchase")
+        alert.show()
+    }
+
+    private fun proceedWithPurchase(storeItem: StoreItem) {
         val currentCategory = if (stickersButton.background.constantState == requireContext().getDrawable(R.drawable.green_cornered_bg)?.constantState) {
             "purchasedStickers"
         } else {
@@ -257,7 +278,6 @@ class StoreFragment : Fragment()
                     val currentBalance = balanceSnapshot.getValue(Int::class.java) ?: 0
                     if (currentBalance >= storeItem.price) {
                         purchaseItem(storeItem, purchasedRef, balanceRef, currentBalance)
-
                     } else {
                         Log.d("StoreFragment", "Insufficient balance for: ${storeItem.name}")
                         Toast.makeText(requireContext(), "Insufficient balance to purchase: ${storeItem.name}", Toast.LENGTH_SHORT).show()
@@ -267,13 +287,12 @@ class StoreFragment : Fragment()
                     Toast.makeText(requireContext(), "Failed to retrieve your balance. Please try again.", Toast.LENGTH_SHORT).show()
                 }
             }
-            Toast.makeText(requireContext(), "Purchase successful", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             Log.e("StoreFragment", "Failed to retrieve purchased items")
             Toast.makeText(requireContext(), "Failed to retrieve purchased items. Please try again.", Toast.LENGTH_SHORT).show()
         }
-
     }
+
 
 
 

@@ -6,4 +6,5 @@ object Global {
     var reminderMinute: Int = 0
     var reminderRepeat: String = "Never"
     var isReminderEnabled: Boolean = false
+    var isNewEntry : Boolean? = null
 }
