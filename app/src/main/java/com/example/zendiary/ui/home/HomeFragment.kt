@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -71,7 +74,54 @@ class HomeFragment : Fragment() {
 
         Global.isNewEntry = false
 
+        // Reference the ImageView
+        val notificationIcon: ImageView = root.findViewById(R.id.iv_notification)
+
+        // Set click listener
+        notificationIcon.setOnClickListener {
+            showNotificationDialog()
+        }
+
         return root
+    }
+
+    private fun showNotificationDialog() {
+        // Inflate the custom layout
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_notification, null)
+
+        // Reference the views inside the custom layout
+        val iconImageView: ImageView = dialogView.findViewById(R.id.iv_dialog_icon)
+        val titleTextView: TextView = dialogView.findViewById(R.id.tv_dialog_title)
+        val messageTextView: TextView = dialogView.findViewById(R.id.tv_dialog_message)
+        val viewAllButton: Button = dialogView.findViewById(R.id.btn_dialog_view_all)
+        val dismissButton: Button = dialogView.findViewById(R.id.btn_dialog_dismiss)
+
+        // Optional: Customize the content dynamically
+        titleTextView.text = "Notification Alert"
+        messageTextView.text = """
+        Here are your latest updates:
+        1. New task assigned.
+        2. Upcoming meeting at 3 PM.
+        3. Your profile update was successful.
+    """.trimIndent()
+
+        // Build the dialog
+        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
+            .setView(dialogView)
+            .create()
+
+        // Set button click listeners
+        viewAllButton.setOnClickListener {
+            Toast.makeText(requireContext(), "View All Clicked", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+
+        dismissButton.setOnClickListener {
+            dialog.dismiss() // Close the dialog
+        }
+
+        // Show the dialog
+        dialog.show()
     }
 
     private fun showDeleteConfirmationDialog(note: Note) {
