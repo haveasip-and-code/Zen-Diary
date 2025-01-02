@@ -28,13 +28,13 @@
                 android:src="@drawable/ic_dn_journal"
                 android:backgroundTint="@color/transparent"/>
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/delete_btn"-->
-<!--                android:layout_width="35dp"-->
-<!--                android:layout_height="33dp"-->
-<!--                android:layout_marginStart="10dp"-->
-<!--                android:contentDescription="Journal Deletion"-->
-<!--                android:background="@drawable/delete"/>-->
+            <ImageButton
+                android:id="@+id/delete_btn"
+                android:layout_width="35dp"
+                android:layout_height="33dp"
+                android:layout_marginStart="10dp"
+                android:contentDescription="Journal Deletion"
+                android:background="@drawable/delete"/>
 
             <Button
                 android:id="@+id/btn_clip"

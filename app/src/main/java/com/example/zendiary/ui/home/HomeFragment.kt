@@ -94,19 +94,19 @@ class HomeFragment : Fragment() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_notification, null)
 
         // Reference the views inside the custom layout
-        val iconImageView: ImageView = dialogView.findViewById(R.id.iv_dialog_icon)
+        //val iconImageView: ImageView = dialogView.findViewById(R.id.iv_dialog_icon)
         val titleTextView: TextView = dialogView.findViewById(R.id.tv_dialog_title)
         val messageTextView: TextView = dialogView.findViewById(R.id.tv_dialog_message)
         val viewAllButton: Button = dialogView.findViewById(R.id.btn_dialog_view_all)
         val dismissButton: Button = dialogView.findViewById(R.id.btn_dialog_dismiss)
 
         // Optional: Customize the content dynamically
-        titleTextView.text = "Notification Alert"
+        titleTextView.text = "Notification"
         messageTextView.text = """
         Here are your latest updates:
-        1. New task assigned.
-        2. Upcoming meeting at 3 PM.
-        3. Your profile update was successful.
+        1. Upcoming meeting at 3 PM.
+        2. Upcoming meeting at 9 AM.
+        3. 3 Years anniversary
     """.trimIndent()
 
         // Build the dialog
