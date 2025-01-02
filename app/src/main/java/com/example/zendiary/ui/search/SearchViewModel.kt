@@ -3,7 +3,6 @@ package com.example.zendiary.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.zendiary.data.FirebaseRepository
 import com.example.zendiary.data.FirebaseRepository.fetchDayPreviewsForSearchQuery
 import com.example.zendiary.ui.analytics.models.DayPreview
 

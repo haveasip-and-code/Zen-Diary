@@ -5,19 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.zendiary.Global
-import com.example.zendiary.databinding.FragmentSearchBinding // Import ViewBinding
+import com.example.zendiary.databinding.FragmentSearchBinding
 import com.example.zendiary.ui.analytics.adapters.DayPreviewAdapter
 
 class SearchFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = SearchFragment()
-    }
 
     private val viewModel: SearchViewModel by viewModels()
     private var _binding: FragmentSearchBinding? = null

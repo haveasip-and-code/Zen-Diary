@@ -26,6 +26,8 @@
             android:hint="Search..."
             android:textSize="20sp"
             android:textStyle="bold"
+            android:inputType="text"
+            android:autofillHints="What was in your entries?"
             android:paddingHorizontal="20dp"
             android:layout_weight="10"
             android:layout_gravity="center"/>
