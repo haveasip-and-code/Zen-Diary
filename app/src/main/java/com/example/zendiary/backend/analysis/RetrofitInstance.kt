@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:5000/") // Flask API URL
+        .baseUrl("https://harryduong.pythonanywhere.com") // Flask API URL
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

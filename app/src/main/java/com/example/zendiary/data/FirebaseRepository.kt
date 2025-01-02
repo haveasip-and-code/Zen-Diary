@@ -16,6 +16,51 @@ import com.google.firebase.database.ValueEventListener
 
 object FirebaseRepository {
 
+    fun fetchDayPreviewsForSearchQuery(
+        query: String, // New parameter for search query
+        callback: (List<DayPreview>) -> Unit
+    ) {
+        val database = FirebaseDatabase.getInstance()
+        val sentimentRef = database.getReference("users/$userId/entries") // Adjust path as needed
+
+        sentimentRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val dayPreviews = mutableListOf<DayPreview>() // List to collect DayPreview entries
+
+                for (child in snapshot.children) {
+                    // Get the headerEntry and text
+                    val headerEntry = child.child("headerEntry").value as? String ?: ""
+                    val text = child.child("text").value as? String ?: ""
+
+                    // Check if the query is contained in either headerEntry or text (case-insensitive)
+                    if (headerEntry.contains(query, ignoreCase = true) || text.contains(query, ignoreCase = true)) {
+                        // Extract the sentiment label, fallback to "Unknown" if not found
+                        val result = child.child("sentiment").child("label").value as? String ?: "Unknown"
+
+                        // Derive or map the mood icon resource ID based on the sentiment result
+                        val moodIconResId = getMoodIconResId(result)
+
+                        // Add a new DayPreview object to the list
+                        dayPreviews.add(
+                            DayPreview(
+                                result = result,
+                                title = headerEntry,
+                                snippet = text,
+                                moodIconResId = moodIconResId
+                            )
+                        )
+                    }
+                }
+                // Pass all collected DayPreview objects to the callback
+                callback(dayPreviews)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(emptyList()) // Handle errors by returning an empty list
+            }
+        })
+    }
+
     fun fetchDayPreviewsForDate(
         dateIso: String,
         callback: (List<DayPreview>) -> Unit

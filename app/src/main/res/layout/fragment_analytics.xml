@@ -130,7 +130,7 @@
 
     </LinearLayout>
 
-    <!-- Recommendations -->
+    <!-- Day Preview -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDayPreview"
         android:layout_width="match_parent"

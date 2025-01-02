@@ -310,9 +310,9 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
             }
         }
 
-        view.findViewById<ImageButton>(R.id.delete_btn).setOnClickListener {
-            showDeleteConfirmationDialog()
-        }
+//        view.findViewById<ImageButton>(R.id.delete_btn).setOnClickListener {
+//            showDeleteConfirmationDialog()
+//        }
 
         view.findViewById<Button>(R.id.btn_save).setOnClickListener {
             headerEntry = editHeaderText.text.toString()
@@ -504,9 +504,9 @@ class JournalFragment : Fragment(), ImagePickerBottomSheet.OnImageOptionSelected
 
 
     private fun deleteJournalEntry() {
-        if (Global.isNewEntry == false) {
-            deleteEntryFirebase()
-        }
+//        if (Global.isNewEntry == false) {
+//            deleteEntryFirebase()
+//        }
         showToast("Journal entry deleted!")
     }
 

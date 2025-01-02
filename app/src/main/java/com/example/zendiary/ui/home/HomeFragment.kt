@@ -82,6 +82,10 @@ class HomeFragment : Fragment() {
             showNotificationDialog()
         }
 
+        // Set search button click listener
+        binding.searchBar.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_home_to_searchFragment)
+        }
         return root
     }
 

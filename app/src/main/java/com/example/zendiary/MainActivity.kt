@@ -27,27 +27,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        // Initialize Chaquopy (only needed once per app)
-//        if (!Python.isStarted()) {
-//            Python.start(AndroidPlatform(this))
-//        }
-//
-//        // Run the Python Flask app in a background thread
-//        val python = Python.getInstance()
-//        val pyObject = python.getModule("app")
-//
-//        // Use an Executor to run the Flask server in the background
-//        val executor = Executors.newSingleThreadExecutor()
-//        executor.execute {
-//            try {
-//                pyObject.callAttr("run")
-//                Log.d("MainActivity", "Flask server started successfully")
-//            } catch (e: Exception) {
-//                Log.e("MainActivity", "Error starting Flask server: ${e.message}")
-//            }
-//        }
-
-
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -64,7 +43,8 @@ class MainActivity : AppCompatActivity() {
             R.id.pincode,
             R.id.deletionConfirmationFragment,
             R.id.paymentFragment,
-            R.id.storeFragment
+            R.id.storeFragment,
+            R.id.searchFragment
         )
 
         // Passing each menu ID as a set of Ids because each

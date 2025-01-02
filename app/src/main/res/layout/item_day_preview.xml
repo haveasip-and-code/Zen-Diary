@@ -29,7 +29,7 @@
                 android:id="@+id/tv_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="7dp"
+                android:layout_marginVertical="20dp"
                 android:text="Pumpkin Chicken Curry"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -43,7 +43,7 @@
                 android:textSize="14sp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textColor="#80000000" />
+                android:textColor="#80000000"/>
         </LinearLayout>
 
         <ImageView
