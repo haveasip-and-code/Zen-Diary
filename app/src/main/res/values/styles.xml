@@ -24,4 +24,13 @@
         <item name="android:background">#E0E7B5</item> <!-- Màu nền, ví dụ: màu vàng -->
     </style>
 
+    <!-- Custom style for AlertDialog -->
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@drawable/bg_round_dialog</item>
+        <item name="android:windowMinWidthMajor">80%</item>
+        <item name="android:windowMinWidthMinor">80%</item>
+    </style>
 </resources>
+
+
+
