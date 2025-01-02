@@ -1,6 +1,7 @@
 package com.example.zendiary.data
 
 import android.util.Log
+import com.example.zendiary.Global
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -136,4 +137,78 @@ object FirebaseRepository {
             }
     }
 
+    // Function to save a reminder option to Firebase
+    fun saveReminderOption(
+        reminderOption: Map<String, Any>,
+        callback: (Boolean) -> Unit
+    ) {
+        val userId = Global.userId
+        if (userId == null) {
+            Log.e("FirebaseRepository", "User ID is null. Cannot save reminder option.")
+            callback(false)
+            return
+        }
+
+        val database = FirebaseDatabase.getInstance()
+        val remindersRef = database.getReference("users/$userId/reminders/reminder_01")
+
+        remindersRef.setValue(reminderOption)
+            .addOnSuccessListener {
+                // Update the Global object with the saved reminder data
+                Global.reminderHour = reminderOption["hour"] as? Int ?: 0
+                Global.reminderMinute = reminderOption["minute"] as? Int ?: 0
+                Global.reminderRepeat = reminderOption["repeat"] as? String ?: "Never"
+                Global.isReminderEnabled = reminderOption["isEnabled"] as? Boolean ?: false
+                callback(true) // Successfully saved reminder
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseRepository", "Error saving reminder option", it)
+                callback(false) // Failed to save reminder
+            }
+    }
+
+    // Function to load all reminder options from Firebase
+    fun loadReminderOptions(callback: (List<Map<String, Any>>) -> Unit) {
+        val userId = Global.userId
+        if (userId == null) {
+            Log.e("FirebaseRepository", "User ID is null. Cannot load reminder options.")
+            callback(emptyList())
+            return
+        }
+
+        val database = FirebaseDatabase.getInstance()
+        val remindersRef = database.getReference("users/$userId/reminders")
+
+        remindersRef.get()
+            .addOnSuccessListener { snapshot ->
+                val reminderOptions = mutableListOf<Map<String, Any>>()
+
+                for (child in snapshot.children) {
+                    val reminder = child.value as? Map<String, Any>
+                    if (reminder != null) {
+                        reminderOptions.add(reminder)
+                    }
+                }
+
+                // Update the Global object with the first reminder (or default values)
+                if (reminderOptions.isNotEmpty()) {
+                    val firstReminder = reminderOptions[0]
+                    Global.reminderHour = (firstReminder["hour"] as? Long)?.toInt() ?: 0
+                    Global.reminderMinute = (firstReminder["minute"] as? Long)?.toInt() ?: 0
+                    Global.reminderRepeat = firstReminder["repeat"] as? String ?: "Never"
+                    Global.isReminderEnabled = firstReminder["isEnabled"] as? Boolean ?: false
+                } else {
+                    Global.reminderHour = 0
+                    Global.reminderMinute = 0
+                    Global.reminderRepeat = "Never"
+                    Global.isReminderEnabled = false
+                }
+
+                callback(reminderOptions) // Successfully loaded reminders
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseRepository", "Error loading reminder options", it)
+                callback(emptyList()) // Failed to load reminders
+            }
+    }
 }

@@ -1,5 +1,3 @@
-package com.example.zendiary.ui.analytics.adapters
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zendiary.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 class WeekDaysAdapter(
     private val onDayClick: (String) -> Unit // Callback for when a day is clicked
@@ -15,9 +15,20 @@ class WeekDaysAdapter(
 
     private var selectedDay: Int = -1 // Tracks the selected day index
 
+    init {
+        // Set the current day as the selected day
+        val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date()) // Get today's date
+        val todayIndex = currentDate.toIntOrNull()?.let { day ->
+            currentList.indexOfFirst { it.split(" ")[1] == day.toString() }
+        } ?: -1
+        if (todayIndex != -1) {
+            selectedDay = todayIndex
+        }
+    }
+
     inner class WeekDayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val dayText: TextView = itemView.findViewById(R.id.tvDayName)
-        val dateText: TextView = itemView.findViewById(R.id.tvDayDate)
+        private val dayText: TextView = itemView.findViewById(R.id.tvDayName)
+        private val dateText: TextView = itemView.findViewById(R.id.tvDayDate)
 
         fun bind(day: String, position: Int) {
             // Split the day string into day name and date (e.g., "M 29")
@@ -58,6 +69,24 @@ class WeekDaysAdapter(
     override fun onBindViewHolder(holder: WeekDayViewHolder, position: Int) {
         val day = getItem(position) // Get day from the current list
         holder.bind(day, position)
+    }
+
+    override fun submitList(list: List<String>?) {
+        super.submitList(list)
+
+        // Set the current day as the selected day after the list is updated
+        setSelectedDayAsToday(list)
+    }
+
+    private fun setSelectedDayAsToday(list: List<String>?) {
+        val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date()) // Get today's date
+        val todayIndex = currentDate.toIntOrNull()?.let { day ->
+            list?.indexOfFirst { it.split(" ")[1] == day.toString() }
+        } ?: -1
+        if (todayIndex != -1) {
+            selectedDay = todayIndex
+            notifyItemChanged(selectedDay) // Notify that the item has been selected
+        }
     }
 
     companion object {

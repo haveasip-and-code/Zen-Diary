@@ -17,7 +17,7 @@ class AnalyticsViewModel : ViewModel() {
 
     // LiveData for selected day (for day/week toggle logic)
     private val _selectedDay = MutableLiveData<String>()
-    private val selectedDay: LiveData<String> get() = _selectedDay
+    val selectedDay: LiveData<String> get() = _selectedDay
 
     // LiveData for the current mood flow and mood bar data
     private val _moodFlowData = MutableLiveData<List<Float>>() // Example mood flow data
@@ -39,6 +39,20 @@ class AnalyticsViewModel : ViewModel() {
         // Load initial data
         loadMoodFlowData()
         initializeWeekDays()
+
+        val calendar = Calendar.getInstance()
+        // Get the current day of the week
+        val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // Sunday = 1, Monday = 2, ..., Saturday = 7
+        when (currentDayOfWeek) {
+            1 -> updateSelectedDay("Su")
+            2 -> updateSelectedDay("M")
+            3 -> updateSelectedDay("Tu")
+            4 -> updateSelectedDay("W")
+            5 -> updateSelectedDay("Th")
+            6 -> updateSelectedDay("F")
+            7 -> updateSelectedDay("Sa")
+        }
+
         loadPreviewsForDay(selectedDay.value ?: "M")
     }
 
@@ -66,17 +80,7 @@ class AnalyticsViewModel : ViewModel() {
         // Update LiveData with the date range
         _dateRange.value = startOfWeek to endOfWeek
 
-        // Get the current day of the week
         val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // Sunday = 1, Monday = 2, ..., Saturday = 7
-        when (currentDayOfWeek) {
-            1 -> updateSelectedDay("Su")
-            2 -> updateSelectedDay("M")
-            3 -> updateSelectedDay("T")
-            4 -> updateSelectedDay("W")
-            5 -> updateSelectedDay("T")
-            6 -> updateSelectedDay("F")
-            7 -> updateSelectedDay("Sa")
-        }
 
         // Find the offset to adjust the calendar to the start of the week (Monday)
         val daysToMonday = if (currentDayOfWeek == Calendar.SUNDAY) {
@@ -96,7 +100,7 @@ class AnalyticsViewModel : ViewModel() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
 
         // Fetch sentiment and initialize menu for each day
-        val dayAbbreviations = listOf("M", "T", "W", "T", "F", "Sa", "Su")
+        val dayAbbreviations = listOf("M", "Tu", "W", "Th", "F", "Sa", "Su")
 
         val dayPreviewsList = mutableListOf<Pair<String, List<DayPreview>>>()
 
@@ -107,9 +111,9 @@ class AnalyticsViewModel : ViewModel() {
             // Get the weekday abbreviation
             val weekday = when (calendar.get(Calendar.DAY_OF_WEEK)) {
                 Calendar.MONDAY -> "M"
-                Calendar.TUESDAY -> "T"
+                Calendar.TUESDAY -> "Tu"
                 Calendar.WEDNESDAY -> "W"
-                Calendar.THURSDAY -> "T"
+                Calendar.THURSDAY -> "Th"
                 Calendar.FRIDAY -> "F"
                 Calendar.SATURDAY -> "Sa"
                 Calendar.SUNDAY -> "Su"
@@ -136,6 +140,7 @@ class AnalyticsViewModel : ViewModel() {
                 // If this is the last day of the week, update the LiveData or variable
                 if (dayPreviewsList.size == dayAbbreviations.size) {
                     _weeklyDayPreviews.value = dayPreviewsList
+                    loadPreviewsForDay(selectedDay.value ?: "M")
                 }
             }
 

@@ -33,7 +33,7 @@ class DayPreviewAdapter(
         notifyDataSetChanged()
     }
 
-    class DayPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class DayPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvHeader: TextView = itemView.findViewById(R.id.tv_header) // Journal Title
         private val tvPreview: TextView = itemView.findViewById(R.id.tv_preview) // Journal Content Snippet
         private val ibImagePreview: ImageView = itemView.findViewById(R.id.ib_image_preview) // Mood Icon
