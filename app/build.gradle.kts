@@ -23,14 +23,14 @@ android {
         }
     }
 
-    chaquopy {
-        defaultConfig {
-            buildPython("C:/Users/Admin/AppData/Local/Programs/Python/Python39/python.exe")
-            pip {
-                install("-r", "requirements.txt")
-            }
-        }
-    }
+//    chaquopy {
+//        defaultConfig {
+//            buildPython("C:/Users/Admin/AppData/Local/Programs/Python/Python39/python.exe")
+//            pip {
+//                install("-r", "requirements.txt")
+//            }
+//        }
+//    }
 
     buildTypes {
         release {
