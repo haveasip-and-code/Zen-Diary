@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
         val dismissButton: Button = dialogView.findViewById(R.id.btn_dialog_dismiss)
 
         // Optional: Customize the content dynamically
-        titleTextView.text = "Notification Alert"
+        titleTextView.text = "Notification"
         messageTextView.text = """
         Here are your latest updates:
         1. Upcoming meeting at 3 PM.
