@@ -61,7 +61,12 @@
         android:id="@+id/reminderTime"
         android:name="com.example.zendiary.ui.profile.ReminderFragment"
         android:label="Reminder"
-        tools:layout="@layout/fragment_reminder" />
+        tools:layout="@layout/fragment_reminder" >
+        <action
+            android:id="@+id/reminderTime_to_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/privacyPolicyFragment"

@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.NumberPicker
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
@@ -39,6 +40,11 @@ class ReminderFragment : Fragment() {
         backButton.setOnClickListener {
             // Sử dụng NavController để quay lại ProfileFragment
             findNavController().navigateUp() // Điều này sẽ đưa bạn quay lại fragment trước đó
+        }
+
+        val submitButton: ImageButton = rootView.findViewById(R.id.submit_button_reminder)
+        submitButton.setOnClickListener {
+            Toast.makeText(requireContext(), "Reminder Time Saved", Toast.LENGTH_SHORT).show()
         }
 
         // Cấu hình các view của fragment_reminder
