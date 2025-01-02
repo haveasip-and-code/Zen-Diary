@@ -3,7 +3,6 @@ package com.example.zendiary
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,8 +14,8 @@ import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import com.example.zendiary.data.FirebaseRepository
 import com.example.zendiary.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.example.zendiary.ui.profile.StoreFragment
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
